@@ -1,25 +1,70 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Text, TextInput, TouchableOpacity, Image } from 'react-native';
-
+import { StyleSheet, Text } from 'react-native';
+import { Button, TextField } from 'material-bread';
+import LinearGradient from 'react-native-linear-gradient';
 export default class Login extends Component {
     static navigationOptions = {
         header: null,
     };
     render () {
         return (
-            <View style={styles.container}>
+            <LinearGradient colors={[ '#69A1F4', '#8B55FF']} style={styles.container}>
                 <Text style={styles.title}>Cadastro</Text>
-                <TextInput  style={styles.input} underlineColorAndroid="transparent" placeholder="Username" />                
-                <TextInput  style={styles.input} underlineColorAndroid="transparent" placeholder="Email" />
-                <TextInput  style={styles.input} underlineColorAndroid="transparent" placeholder="Senha" />
-                <TouchableOpacity 
-                style={ styles.loginButton } 
-                onPress={() => {
-                    this.props.navigation.navigate('Login');
-                }}>
-                <Text style={ styles.loginButtonText } >Cadastrar</Text>
-            </TouchableOpacity>
-            </View>
+                <TextField
+                    label={'Nome Completo'} 
+                    type={'filled'}
+                    labelColor={'#fafafa'}
+                    underlineColor={'#5849FF'}
+                    style={{ backgroundColor: 'rgba(52, 52, 52, 0.2)'}}
+                    containerStyle={{ width: '60%' }} />     
+                <Text></Text>
+                <TextField
+                    label={'Nome de Usuário'} 
+                    type={'filled'}
+                    labelColor={'#fafafa'}
+                    underlineColor={'#5849FF'}
+                    style={{ backgroundColor: 'rgba(52, 52, 52, 0.2)'}}
+                    containerStyle={{ width: '60%' }} /> 
+                <Text></Text>
+                <TextField
+                    label={'Email'} 
+                    type={'filled'}
+                    labelColor={'#fafafa'}
+                    underlineColor={'#5849FF'}
+                    style={{ backgroundColor: 'rgba(52, 52, 52, 0.2)'}}
+                    containerStyle={{ width: '60%' }} 
+                />
+                <Text></Text>
+                <TextField 
+                    label={'Senha'} 
+                    type={'filled'}
+                    labelColor={'#fafafa'}
+                    underlineColor={'#5849FF'}
+                    style={{ backgroundColor: 'rgba(52, 52, 52, 0.2)'}}
+                    containerStyle={{ width: '60%' }} />
+                <Text></Text>
+                <Button 
+                    text={'Cadastar'}
+                    type="contained"
+                    dense
+                    style={styles.loginButton}
+                    textStyle={{ paddingRight: '20%' }}
+                    color={'#4385E9'}
+                    >
+                </Button>
+                <Text></Text>
+                <Button 
+                    text={'Voltar'}
+                    type="contained"
+                    dense
+                    style={styles.loginButton}
+                    textStyle={{ paddingRight: '27%' }}
+                    color={'#4385E9'}
+                    onPress={() => {
+                        this.props.navigation.navigate('Login');
+                    }}>
+                </Button>
+            </LinearGradient>
         );
     }
 }
@@ -33,7 +78,7 @@ const styles = StyleSheet.create({
     },
     title: {
         fontSize: 30,
-        color: '#000',
+        color: '#fafafa',
         marginBottom: 20,
     },
 
@@ -47,15 +92,9 @@ const styles = StyleSheet.create({
     },
 
     loginButton: {
-        backgroundColor: 'transparent',
-        width: '60%',
-        borderWidth: 1,
-        borderRadius: 5,
-        borderColor: '#9900cc',
-        justifyContent: 'center',
+        width: '50%',
         alignItems: 'center',
-        padding: 10,
-        marginBottom: 10,
+        justifyContent: 'center',
     },
 
     loginButtonText: {
