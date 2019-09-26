@@ -10,13 +10,12 @@ import Product from './pages/product';
 export default createStackNavigator ({
     Login,
     Singin,
-    Tabstext,
     Main,
     Product,
 }, {
     navigationOptions: {
         headerStyle: {
-            backgroundColor: "#000",
+            backgroundColor: "#446DAB",
         },
 
         headerTintColor: "#fff",

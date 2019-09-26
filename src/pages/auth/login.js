@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, Image, View } from 'react-native';
+import { StyleSheet, Text, Image } from 'react-native';
 import { Button, TextField } from 'material-bread';
 import LinearGradient from 'react-native-linear-gradient';
 
@@ -29,7 +29,7 @@ export default class Login extends Component {
                     style={{ backgroundColor: 'rgba(52, 52, 52, 0.2)'  }}
                     containerStyle={{ width: '60%' }}
                 />
-                <Text></Text>
+                <Text></Text>                
                 <Button 
                     text={'Acessar'}
                     type="contained"
@@ -38,10 +38,10 @@ export default class Login extends Component {
                     textStyle={{ paddingRight: '25%' }}
                     color={'#4385E9'}
                     onPress={() => {
-                        this.props.navigation.navigate('Tabstext');
+                        this.props.navigation.navigate('Main');
                     }}>
                 </Button>
-                <Text></Text>
+                <Text></Text>                
                 <Button
                     text={'Cadastro'}
                     type="contained"
@@ -63,7 +63,6 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#fafafa',
     },
     title: {
         fontSize: 30,

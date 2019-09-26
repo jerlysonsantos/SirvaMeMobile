@@ -58,7 +58,7 @@ export default class Login extends Component {
                     type="contained"
                     dense
                     style={styles.loginButton}
-                    textStyle={{ paddingRight: '27%' }}
+                    textStyle={{ paddingRight: '30%' }}
                     color={'#4385E9'}
                     onPress={() => {
                         this.props.navigation.navigate('Login');
