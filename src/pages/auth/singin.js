@@ -18,14 +18,18 @@ export default class Login extends Component {
     };
 
     register = async (state) => {
+      try {
         await api.post('/auth/register', state)
-            .then(res => {
-                alert(res);
-                this.props.navigation.navigate('Login');
-            })
-            .catch(error => {
-                alert(error);
-            });
+          .then(async (res) => {
+            const { user, token } = res.data;
+            await AsyncStorage.setItem('@token', token);
+            await AsyncStorage.setItem('@_user', JSON.stringify(user));
+            this.props.navigation.navigate('Main');
+          });
+      } catch (error) {
+        alert(error.response.data.error);
+      }
+
     };
 
     render () {
@@ -33,7 +37,7 @@ export default class Login extends Component {
             <LinearGradient colors={[ '#69A1F4', '#8B55FF']} style={styles.container}>
                 <Text style={styles.title}>Cadastro</Text>
                 <TextField
-                    label={'Nome Completo'} 
+                    label={'Nome Completo'}
                     type={'filled'}
                     labelColor={'#fafafa'}
                     underlineColor={'#5849FF'}
@@ -41,10 +45,10 @@ export default class Login extends Component {
                     value={this.state.name}
                     onChangeText={value => this.setState({ name: value })}
                     style={{ backgroundColor: 'rgba(52, 52, 52, 0.2)', color: '#fafafa'}}
-                    containerStyle={{ width: '60%' }} />     
+                    containerStyle={{ width: '60%' }} />
                 <Text></Text>
                 <TextField
-                    label={'Nome de Usuário'} 
+                    label={'Nome de Usuário'}
                     type={'filled'}
                     labelColor={'#fafafa'}
                     focusedLabelColor={'#ddd'}
@@ -52,10 +56,10 @@ export default class Login extends Component {
                     value={this.state.username}
                     onChangeText={value => this.setState({ username: value })}
                     style={{ backgroundColor: 'rgba(52, 52, 52, 0.2)', color: '#fafafa'}}
-                    containerStyle={{ width: '60%' }} /> 
+                    containerStyle={{ width: '60%' }} />
                 <Text></Text>
                 <TextField
-                    label={'Email'} 
+                    label={'Email'}
                     type={'filled'}
                     labelColor={'#fafafa'}
                     focusedLabelColor={'#ddd'}
@@ -63,11 +67,11 @@ export default class Login extends Component {
                     value={this.state.email}
                     onChangeText={value => this.setState({ email: value })}
                     style={{ backgroundColor: 'rgba(52, 52, 52, 0.2)', color: '#fafafa'}}
-                    containerStyle={{ width: '60%' }} 
+                    containerStyle={{ width: '60%' }}
                 />
                 <Text></Text>
-                <TextField 
-                    label={'Senha'} 
+                <TextField
+                    label={'Senha'}
                     type={'filled'}
                     secureTextEntry={true}
                     labelColor={'#fafafa'}
@@ -78,7 +82,7 @@ export default class Login extends Component {
                     style={{ backgroundColor: 'rgba(52, 52, 52, 0.2)', color: '#fafafa'}}
                     containerStyle={{ width: '60%' }} />
                 <Text></Text>
-                <Button 
+                <Button
                     text={'Cadastar'}
                     type="contained"
                     dense
@@ -91,7 +95,7 @@ export default class Login extends Component {
                     >
                 </Button>
                 <Text></Text>
-                <Button 
+                <Button
                     text={'Voltar'}
                     type="contained"
                     dense
@@ -138,7 +142,7 @@ const styles = StyleSheet.create({
     loginButtonText: {
         color: '#000',
     },
-    
+
     image: {
         width: '50%',
         height: '30%',

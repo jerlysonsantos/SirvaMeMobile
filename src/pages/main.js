@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import api from '../services/api';
+import AsyncStorage from '@react-native-community/async-storage';
 
 import { StyleSheet, Text, FlatList } from 'react-native';
 import {
