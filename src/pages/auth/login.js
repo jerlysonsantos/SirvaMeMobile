@@ -3,30 +3,58 @@ import { StyleSheet, Text, Image } from 'react-native';
 import { Button, TextField } from 'material-bread';
 import LinearGradient from 'react-native-linear-gradient';
 
+
+import api from '../../services/api';
+
 export default class Login extends Component {
     static navigationOptions = {
         header: null,
     };
+
+    state = {
+        emailOrUser: '',
+        password: ''
+    };
+
+    login = async (state) => {
+        await api.post('/auth/login', state)
+            .then(res => {
+                alert(res);
+                this.props.navigation.navigate('Main');
+            })
+            .catch(error => {
+                alert(error);
+                console.log(error);
+            });
+    };
+
     render () {
         return (
             <LinearGradient colors={[ '#69A1F4', '#8B55FF']} style={styles.container}>
                 <Image source={require('../../imgs/download.png')} style={ styles.image }></Image>
                 <Text style={styles.title}>Sirva.Me</Text>
                 <TextField 
-                    label={'Email'}
+                    label={'Email ou Nome de Usuário'}
                     type={'filled'}
                     labelColor={'#fafafa'}
                     underlineColor={'#5849FF'}
-                    style={{ backgroundColor: 'rgba(52, 52, 52, 0.2)'}}
+                    focusedLabelColor={'#ddd'}
+                    value={this.state.emailOrUser}
+                    onChangeText={value => this.setState({ emailOrUser: value })}
+                    style={{ backgroundColor: 'rgba(52, 52, 52, 0.2)', color: '#fafafa'}}
                     containerStyle={{ width: '60%' }}
                 />
                 <Text></Text>
                 <TextField 
                     label={'Senha'} 
                     type={'filled'}
+                    secureTextEntry={true}
                     labelColor={'#fafafa'}
                     underlineColor={'#5849FF'}
-                    style={{ backgroundColor: 'rgba(52, 52, 52, 0.2)'  }}
+                    focusedLabelColor={'#ddd'}
+                    value={this.state.password}
+                    onChangeText={value => this.setState({ password: value })}
+                    style={{ backgroundColor: 'rgba(52, 52, 52, 0.2)', color: '#fafafa'}}
                     containerStyle={{ width: '60%' }}
                 />
                 <Text></Text>                
@@ -38,7 +66,7 @@ export default class Login extends Component {
                     textStyle={{ paddingRight: '25%' }}
                     color={'#4385E9'}
                     onPress={() => {
-                        this.props.navigation.navigate('Main');
+                        this.login(this.state);
                     }}>
                 </Button>
                 <Text></Text>                

@@ -2,10 +2,32 @@ import React, { Component } from 'react';
 import { StyleSheet, Text } from 'react-native';
 import { Button, TextField } from 'material-bread';
 import LinearGradient from 'react-native-linear-gradient';
+
+import api from '../../services/api';
+
 export default class Login extends Component {
     static navigationOptions = {
         header: null,
     };
+
+    state = {
+        username: '',
+        name: '',
+        email: '',
+        password: '',
+    };
+
+    register = async (state) => {
+        await api.post('/auth/register', state)
+            .then(res => {
+                alert(res);
+                this.props.navigation.navigate('Login');
+            })
+            .catch(error => {
+                alert(error);
+            });
+    };
+
     render () {
         return (
             <LinearGradient colors={[ '#69A1F4', '#8B55FF']} style={styles.container}>
@@ -15,32 +37,45 @@ export default class Login extends Component {
                     type={'filled'}
                     labelColor={'#fafafa'}
                     underlineColor={'#5849FF'}
-                    style={{ backgroundColor: 'rgba(52, 52, 52, 0.2)'}}
+                    focusedLabelColor={'#ddd'}
+                    value={this.state.name}
+                    onChangeText={value => this.setState({ name: value })}
+                    style={{ backgroundColor: 'rgba(52, 52, 52, 0.2)', color: '#fafafa'}}
                     containerStyle={{ width: '60%' }} />     
                 <Text></Text>
                 <TextField
                     label={'Nome de Usuário'} 
                     type={'filled'}
                     labelColor={'#fafafa'}
+                    focusedLabelColor={'#ddd'}
                     underlineColor={'#5849FF'}
-                    style={{ backgroundColor: 'rgba(52, 52, 52, 0.2)'}}
+                    value={this.state.username}
+                    onChangeText={value => this.setState({ username: value })}
+                    style={{ backgroundColor: 'rgba(52, 52, 52, 0.2)', color: '#fafafa'}}
                     containerStyle={{ width: '60%' }} /> 
                 <Text></Text>
                 <TextField
                     label={'Email'} 
                     type={'filled'}
                     labelColor={'#fafafa'}
+                    focusedLabelColor={'#ddd'}
                     underlineColor={'#5849FF'}
-                    style={{ backgroundColor: 'rgba(52, 52, 52, 0.2)'}}
+                    value={this.state.email}
+                    onChangeText={value => this.setState({ email: value })}
+                    style={{ backgroundColor: 'rgba(52, 52, 52, 0.2)', color: '#fafafa'}}
                     containerStyle={{ width: '60%' }} 
                 />
                 <Text></Text>
                 <TextField 
                     label={'Senha'} 
                     type={'filled'}
+                    secureTextEntry={true}
                     labelColor={'#fafafa'}
+                    focusedLabelColor={'#ddd'}
                     underlineColor={'#5849FF'}
-                    style={{ backgroundColor: 'rgba(52, 52, 52, 0.2)'}}
+                    value={this.state.password}
+                    onChangeText={value => this.setState({ password: value })}
+                    style={{ backgroundColor: 'rgba(52, 52, 52, 0.2)', color: '#fafafa'}}
                     containerStyle={{ width: '60%' }} />
                 <Text></Text>
                 <Button 
@@ -48,6 +83,9 @@ export default class Login extends Component {
                     type="contained"
                     dense
                     style={styles.loginButton}
+                    onPress={() => {
+                        this.register(this.state);
+                    }}
                     textStyle={{ paddingRight: '20%' }}
                     color={'#4385E9'}
                     >
