@@ -19,6 +19,12 @@ export default class Login extends Component {
     loading: false,
   };
 
+  // Caso já exista um Token, pular a tela de login, porem isso tem q mudar
+  async componentDidMount() {
+    if (await AsyncStorage.getItem('@token')) {
+      this.props.navigation.navigate('Main');
+    }
+  }
 
   login = async (state) => {
     try {

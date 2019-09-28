@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import api from '../services/api';
 import AsyncStorage from '@react-native-community/async-storage';
 
+import StarRating from 'react-native-star-rating';
+
 import { StyleSheet, Text, FlatList } from 'react-native';
 import {
     Avatar,
@@ -23,25 +25,33 @@ export default class Main extends Component {
 
     state = {
         productInfo: {},
-        docs: [],
+        services: [],
         page: 1,
         visible: false,
     };
 
     componentDidMount() {
-        this.loadProducts();
+      this.loadProducts();
     }
 
     loadProducts = async (page = 1) => {
-        const response = await api.get(`/products?page=${page}`);
+      try {
+        const response = await api.get('/service/getServices', {
+          headers: {
+            'Authorization':  `Bearrer ${await AsyncStorage.getItem('@token')}`,
+          }
+        });
 
-        const { docs, ...productInfo } = response.data;
+        const { services, ...productInfo } = response.data;
 
-        this.setState({ docs: [...this.state.docs, ...docs], 
+        this.setState({ services: [...this.state.services, ...services],
             productInfo,
             page,
          });
 
+      } catch (error) {
+        alert(error.response.data.error);
+      }
     };
 
     loadMore = () => {
@@ -57,7 +67,7 @@ export default class Main extends Component {
 
     renderItem = ({ item }) => (
         <Card style={ styles.productContainer }>
-            <CardHeader 
+            <CardHeader
                 thumbnail={
                     <Avatar
                         type="icon"
@@ -66,21 +76,28 @@ export default class Main extends Component {
                         style={{ elevation: 4, ...shadow(4) }}
                     />
                 }
-                title={ item.title }
-                subtitle={ 'email@gmail.com' }
+                title={ item.name }
+                subtitle={ `Serviço por ${item.user.name}` }
                 action={<IconButton name="more-vert" size={24} />}
             />
-            <CardContent onPress={() => { this.props.navigation.navigate('Product', { product: item }); }}>
-                <Text style={ styles.productDescripion }>
-                    { item.description }
-                </Text>
-            </CardContent>    
+            <CardContent onPress={() => { this.props.navigation.navigate('Service', { service: item }); }}>
+              <Text style={ styles.productDescripion }>
+                  { item.description }
+              </Text>
+              <StarRating
+                disabled={true}
+                maxStars={10}
+                starSize={20}
+                rating={item.rank}
+                selectedStar={(rating) => this.onStarRatingPress(rating)}
+              />
+            </CardContent>
         </Card>
     );
 
     searchComponent = () => (
         <Card style={ styles.search }>
-            <CardHeader 
+            <CardHeader
                 title={'Search'}
                 titleStyles={{ color: '#fff' }}
             />
@@ -93,7 +110,7 @@ export default class Main extends Component {
                             onPress={() => {
                                 this.setState({ visible: !this.state.visible });
                             }}
-                            type="contained" 
+                            type="contained"
                             style={{ backgroundColor: '#5B69A9' }}
                             icon={<Icon name="arrow-drop-down" />}
                             iconPosition={'right'}
@@ -102,7 +119,7 @@ export default class Main extends Component {
                     <MenuItem text={'Menu item 1'} onPress={() => this.setState({ visible: false })} />
                     <MenuItem text={'Menu item 2'} onPress={() => this.setState({ visible: false })} />
                     <MenuItem text={'Menu item 3'} onPress={() => this.setState({ visible: false })} />
-                    <MenuItem text={'Menu item 4'} onPress={() => this.setState({ visible: false })} />          
+                    <MenuItem text={'Menu item 4'} onPress={() => this.setState({ visible: false })} />
                 </Menu>
                 <Menu
                     visible={this.state.visible}
@@ -121,27 +138,26 @@ export default class Main extends Component {
                     <MenuItem text={'Menu item 1'} onPress={() => this.setState({ visible: false })} />
                     <MenuItem text={'Menu item 2'} onPress={() => this.setState({ visible: false })} />
                     <MenuItem text={'Menu item 3'} onPress={() => this.setState({ visible: false })} />
-                    <MenuItem text={'Menu item 4'} onPress={() => this.setState({ visible: false })} />          
+                    <MenuItem text={'Menu item 4'} onPress={() => this.setState({ visible: false })} />
                 </Menu>
             </CardContent>
         </Card>
     );
 
     render() {
-        return (
-            <LinearGradient colors={[ '#69A1F4', '#8B55FF']} style={styles.container}>
-                
-                <FlatList
-                    contentContainerStyle={styles.list}
-                    data={this.state.docs}
-                    keyExtractor={item => item._id}
-                    renderItem={ this.renderItem }
-                    ListHeaderComponent={ this.searchComponent }
-                    onEndReached={ this.loadMore }
-                    onEndReachedThreshold={0.1}
-                    />
-            </LinearGradient>
-        );
+      return (
+        <LinearGradient colors={[ '#69A1F4', '#8B55FF']} style={styles.container}>
+          <FlatList
+              contentContainerStyle={styles.list}
+              data={this.state.services}
+              keyExtractor={item => item._id}
+              renderItem={ this.renderItem }
+              ListHeaderComponent={ this.searchComponent }
+              // onEndReached={ this.loadMore } Desabilitado provisoriamente por motivos de bug
+              onEndReachedThreshold={0.1}
+              />
+        </LinearGradient>
+      );
     }
 }
 
@@ -152,7 +168,7 @@ const styles = StyleSheet.create({
       alignItems: 'center',
       backgroundColor: '#fafafa',
     },
-    
+
     list: {
         padding: 20,
     },
