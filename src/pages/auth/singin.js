@@ -15,11 +15,16 @@ export default class Login extends Component {
         name: '',
         email: '',
         password: '',
+        loading: false,
     };
 
     register = async (state) => {
       try {
-        await api.post('/auth/register', state)
+
+        const { loading, ...data } = state;
+
+        this.setState({ loading: true });
+        await api.post('/auth/register', data)
           .then(async (res) => {
             const { user, token } = res.data;
             await AsyncStorage.setItem('@token', token);
@@ -86,6 +91,7 @@ export default class Login extends Component {
                     text={'Cadastar'}
                     type="contained"
                     dense
+                    loading={this.state.loading}
                     style={styles.loginButton}
                     onPress={() => {
                         this.register(this.state);

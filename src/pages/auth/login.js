@@ -15,12 +15,17 @@ export default class Login extends Component {
 
   state = {
     emailOrUser: '',
-    password: ''
+    password: '',
+    loading: false,
   };
+
 
   login = async (state) => {
     try {
-      await api.post('/auth/login', state)
+      const { loading, ...data } = state;
+
+      this.setState({ loading: true });
+      await api.post('/auth/login', data)
         .then(async (res) => {
           const { user, token } = res.data;
           await AsyncStorage.setItem('@token', token);
@@ -29,6 +34,7 @@ export default class Login extends Component {
       });
     } catch (error) {
       alert(error.response.data.error);
+      this.setState({ loading: false });
     }
   };
 
@@ -66,6 +72,7 @@ export default class Login extends Component {
           text={'Acessar'}
           type="contained"
           dense
+          loading={this.state.loading}
           style={styles.loginButton}
           textStyle={{ paddingRight: '25%' }}
           color={'#4385E9'}
