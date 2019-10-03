@@ -36,7 +36,7 @@ export default class Main extends Component {
 
     loadProducts = async (page = 1) => {
       try {
-        const response = await api.get('/service/getServices', {
+        const response = await api.get(`/service/getServices/${page}`, {
           headers: {
             'Authorization':  `Bearrer ${await AsyncStorage.getItem('@token')}`,
           }
