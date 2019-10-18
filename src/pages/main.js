@@ -1,10 +1,14 @@
 import React, { Component } from 'react';
 import api from '../services/api';
 import AsyncStorage from '@react-native-community/async-storage';
+import Drawer from 'react-native-drawer';
+
+import { Buffer } from 'buffer';
+global.Buffer = Buffer;
 
 import StarRating from 'react-native-star-rating';
 
-import { StyleSheet, Text, FlatList } from 'react-native';
+import { StyleSheet, Text, FlatList, Image } from 'react-native';
 import {
     Avatar,
     Card,
@@ -20,7 +24,8 @@ import LinearGradient from 'react-native-linear-gradient';
 
 export default class Main extends Component {
     static navigationOptions = {
-        title: 'Serviços',
+      title: 'Serviços',
+      headerLeft: null,
     };
 
     state = {
@@ -28,6 +33,7 @@ export default class Main extends Component {
         services: [],
         page: 1,
         visible: false,
+        drawerOpen: true,
     };
 
     componentDidMount() {
@@ -35,6 +41,7 @@ export default class Main extends Component {
     }
 
     loadProducts = async (page = 1) => {
+
       try {
         const response = await api.get(`/service/getServices/${page}`, {
           headers: {
@@ -49,8 +56,11 @@ export default class Main extends Component {
             page,
          });
 
+         console.log(services.user.avatar)
+
       } catch (error) {
         alert(error.response.data.error);
+        this.props.navigation.navigate('Login');
       }
     };
 
@@ -69,12 +79,12 @@ export default class Main extends Component {
         <Card style={ styles.productContainer }>
             <CardHeader
                 thumbnail={
-                    <Avatar
-                        type="icon"
-                        content="face"
-                        size={40}
-                        style={{ elevation: 4, ...shadow(4) }}
-                    />
+                  <Avatar
+                    type="image"
+                    image={<Image source={{uri: `data:image/webp;base64,${Buffer.from(item.user.avatar).toString('base64')}`}} /> }
+                    size={40}
+                    style={{ elevation: 4, ...shadow(4) }}
+                  />
                 }
                 title={ item.name }
                 subtitle={ `Serviço por ${item.user.name}` }
@@ -86,7 +96,7 @@ export default class Main extends Component {
               </Text>
               <StarRating
                 disabled={true}
-                maxStars={10}
+                maxStars={5}
                 starSize={20}
                 rating={item.rank}
                 selectedStar={(rating) => this.onStarRatingPress(rating)}
@@ -146,7 +156,24 @@ export default class Main extends Component {
 
     render() {
       return (
-        <LinearGradient colors={[ '#69A1F4', '#8B55FF']} style={styles.container}>
+
+        <Drawer
+          open={this.state.drawerOpen}
+          content={<Text>{'dsasdasdasdasd'}</Text>}
+          type="overlay"
+          tapToClose={true}
+          style={{ backgroundColor: '#fff', width: '50%' }}
+          openDrawerOffset={0.2}
+          panCloseMask={0.2}
+          closedDrawerOffset={-3}
+          onClose={() => {
+            this.setState({drawerOpen: false});
+          }}
+          panOpenMask={0.80}
+          captureGestures="open"
+          acceptPan={false}>
+
+          <LinearGradient colors={[ '#69A1F4', '#8B55FF']} style={styles.container}>
           <FlatList
               contentContainerStyle={styles.list}
               data={this.state.services}
@@ -156,7 +183,8 @@ export default class Main extends Component {
               // onEndReached={ this.loadMore } Desabilitado provisoriamente por motivos de bug
               onEndReachedThreshold={0.1}
               />
-        </LinearGradient>
+          </LinearGradient>
+        </Drawer>
       );
     }
 }
