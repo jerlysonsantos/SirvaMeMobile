@@ -1,31 +1,41 @@
+/**
+ * Tela Principal do Aplicativo
+ */
+
 import React, { Component } from 'react';
 import api from '../services/api';
 import AsyncStorage from '@react-native-community/async-storage';
-import Drawer from 'react-native-drawer';
 
 import { Buffer } from 'buffer';
 global.Buffer = Buffer;
 
 import StarRating from 'react-native-star-rating';
 
-import { StyleSheet, Text, FlatList, Image } from 'react-native';
+import { StyleSheet, Text, FlatList, Image, View, Dimensions } from 'react-native';
 import {
-    Avatar,
-    Card,
-    CardHeader,
-    CardContent,
-    IconButton,
-    shadow,
-    Menu,
-    Button,
-    MenuItem,
-    Icon } from 'material-bread';
+  Avatar,
+  Card,
+  CardHeader,
+  CardContent,
+  IconButton,
+  shadow,
+  Menu,
+  Button,
+  MenuItem,
+  Icon } from 'material-bread';
+
+import {
+  Drawer,
+  DrawerHeader,
+  DrawerSection,
+  DrawerItem,
+  Appbar } from 'material-bread';
+
 import LinearGradient from 'react-native-linear-gradient';
 
 export default class Main extends Component {
     static navigationOptions = {
-      title: 'Serviços',
-      headerLeft: null,
+      header: null,
     };
 
     state = {
@@ -33,15 +43,24 @@ export default class Main extends Component {
         services: [],
         page: 1,
         visible: false,
-        drawerOpen: true,
+        isOpen: false,
+        name: '',
+        email:'',
+        avatar: '',
     };
 
-    componentDidMount() {
+    async componentDidMount() {
       this.loadProducts();
+      this.getUser();
     }
 
-    loadProducts = async (page = 1) => {
+    getUser = async () => {
+      const user = JSON.parse(await AsyncStorage.getItem('@_user'));
+      this.setState({ name: user.name, email: user.email, avatar: user.avatar });
+    };
 
+    // ====================== Carregar Itens da API ======================= //
+    loadProducts = async (page = 1) => {
       try {
         const response = await api.get(`/service/getServices/${page}`, {
           headers: {
@@ -54,15 +73,13 @@ export default class Main extends Component {
         this.setState({ services: [...this.state.services, ...services],
             productInfo,
             page,
-         });
-
-         console.log(services.user.avatar)
+          });
 
       } catch (error) {
         alert(error.response.data.error);
         this.props.navigation.navigate('Login');
-      }
-    };
+        }
+      };
 
     loadMore = () => {
         const { page, productInfo } = this.state;
@@ -74,36 +91,39 @@ export default class Main extends Component {
         this.loadProducts(pageNumber);
 
     }
+    // ====================== Carregar Itens da API ======================= //
 
+    // ====================== Renderizar Item ======================= //
     renderItem = ({ item }) => (
-        <Card style={ styles.productContainer }>
-            <CardHeader
-                thumbnail={
-                  <Avatar
-                    type="image"
-                    image={<Image source={{uri: `data:image/webp;base64,${Buffer.from(item.user.avatar).toString('base64')}`}} /> }
-                    size={40}
-                    style={{ elevation: 4, ...shadow(4) }}
-                  />
-                }
-                title={ item.name }
-                subtitle={ `Serviço por ${item.user.name}` }
-                action={<IconButton name="more-vert" size={24} />}
+      <Card style={ styles.productContainer }>
+        <CardHeader
+          thumbnail={
+            <Avatar
+              type="image"
+              image={<Image source={{uri: `data:image/webp;base64,${Buffer.from(item.user.avatar).toString('base64')}`}} /> }
+              size={40}
+              style={{ elevation: 4, ...shadow(4) }}
             />
-            <CardContent onPress={() => { this.props.navigation.navigate('Service', { service: item }); }}>
-              <Text style={ styles.productDescripion }>
-                  { item.description }
-              </Text>
-              <StarRating
-                disabled={true}
-                maxStars={5}
-                starSize={20}
-                rating={item.rank}
-                selectedStar={(rating) => this.onStarRatingPress(rating)}
-              />
-            </CardContent>
-        </Card>
+          }
+          title={ item.name }
+          subtitle={ `Serviço por ${item.user.name}` }
+          action={<IconButton name="more-vert" size={24} />}
+        />
+        <CardContent onPress={() => { this.props.navigation.navigate('Service', { service: item }); }}>
+          <Text style={ styles.productDescripion }>
+            { item.description }
+          </Text>
+          <StarRating
+            disabled={true}
+            maxStars={5}
+            starSize={20}
+            rating={item.rank}
+            selectedStar={(rating) => this.onStarRatingPress(rating)}
+          />
+        </CardContent>
+      </Card>
     );
+    // ====================== Renderizar Item ======================= //
 
     searchComponent = () => (
         <Card style={ styles.search }>
@@ -155,35 +175,66 @@ export default class Main extends Component {
     );
 
     render() {
+      // ====================== Side Menu ======================= //
+
+      const DrawerContent = ({ name, email, avatar }) => {
+        return (
+          <View>
+            <DrawerHeader
+            title={name}
+            subtitle={email}
+            avatar={
+              <Avatar
+                type="image"
+                size={48}
+                image={<Image source={{uri: `data:image/webp;base64,${Buffer.from(avatar).toString('base64')}`}} />}
+                />
+              }
+            />
+            <DrawerSection bottomDivider>
+              <DrawerItem text={'Inbox'} icon={'mail'} active />
+              <DrawerItem text={'Outbox'} icon={'send'} />
+              <DrawerItem text={'Favorites'} icon={'favorite'} />
+            </DrawerSection>
+          </View>
+        );
+      };
+
+      const AppbarContent = isOpen => {
+        return (
+          <Appbar
+            barType={'normal'}
+            color={'#446DAB'}
+            title={'SirvaMe'}
+            navigation={'menu'}
+            onNavigation={() => this.setState({ isOpen: !this.state.isOpen })}
+            actionItems={[{ name: 'search' }, { name: 'more-vert' }]}
+          />
+        );
+      };
+
+      // ====================== Side Menu ======================= //
+
       return (
-
         <Drawer
-          open={this.state.drawerOpen}
-          content={<Text>{'dsasdasdasdasd'}</Text>}
-          type="overlay"
-          tapToClose={true}
-          style={{ backgroundColor: '#fff', width: '50%' }}
-          openDrawerOffset={0.2}
-          panCloseMask={0.2}
-          closedDrawerOffset={-3}
-          onClose={() => {
-            this.setState({drawerOpen: false});
-          }}
-          panOpenMask={0.80}
-          captureGestures="open"
-          acceptPan={false}>
-
-          <LinearGradient colors={[ '#69A1F4', '#8B55FF']} style={styles.container}>
-          <FlatList
-              contentContainerStyle={styles.list}
-              data={this.state.services}
-              keyExtractor={item => item._id}
-              renderItem={ this.renderItem }
-              ListHeaderComponent={ this.searchComponent }
-              // onEndReached={ this.loadMore } Desabilitado provisoriamente por motivos de bug
-              onEndReachedThreshold={0.1}
-              />
-          </LinearGradient>
+          open={this.state.isOpen}
+          fullHeight
+          scrimStyles={{position: 'absolute'}}
+          drawerContent={<DrawerContent name={this.state.name} email={this.state.email} avatar={this.state.avatar} />}
+          onClose={() => this.setState({ isOpen: false })}
+          animationTime={250}>
+            <LinearGradient colors={[ '#69A1F4', '#8B55FF']} style={styles.container}>
+              <AppbarContent />
+              <FlatList
+                contentContainerStyle={styles.list}
+                data={this.state.services}
+                keyExtractor={item => item._id}
+                renderItem={ this.renderItem }
+                ListHeaderComponent={ this.searchComponent }
+                // onEndReached={ this.loadMore } Desabilitado provisoriamente por motivos de bug
+                onEndReachedThreshold={0.1}
+                />
+            </LinearGradient>
         </Drawer>
       );
     }
@@ -198,7 +249,7 @@ const styles = StyleSheet.create({
     },
 
     list: {
-        padding: 20,
+      padding: 20,
     },
 
     productContainer: {

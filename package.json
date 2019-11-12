@@ -13,7 +13,6 @@
     "material-bread": "^0.2.2",
     "react": "16.8.3",
     "react-native": "0.59.9",
-    "react-native-drawer": "^2.5.1",
     "react-native-linear-gradient": "^2.5.6",
     "react-native-material-bottom-navigation": "^1.0.4",
     "react-native-snap-carousel": "^3.8.2",

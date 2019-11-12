@@ -1,7 +1,11 @@
+/**
+ * Tela de Serviço Individual
+ */
+
 import React from 'react';
 import LinearGradient from 'react-native-linear-gradient';
 import Carousel, { ParallaxImage } from 'react-native-snap-carousel';
-import { FlatList, StyleSheet, Text, View, ScrollView, Image, Dimensions, ListView } from 'react-native';
+import { FlatList, StyleSheet, Text, View, ScrollView, Image, Dimensions } from 'react-native';
 
 const { width: screenWidth } = Dimensions.get('window')
 
@@ -34,12 +38,15 @@ const _renderItem = ({item, index}, parallaxProps) => {
 }
 // ====================== Carousel ======================= //
 
+// ====================== Preços ======================= //
 const pricesComponent = ({ item }) => (
   <Text>{item.priceFor} {item.price}</Text>
 );
+// ====================== Preços ======================= //
 
+// ====================== Comentarios ======================= //
 const commentsComponet = ({ item }) => (
-  <Card>
+  <Card style={{ marginTop: '5%' }}>
     <CardHeader
       thumbnail={
         <Avatar
@@ -66,6 +73,8 @@ const commentsComponet = ({ item }) => (
     </CardContent>
   </Card>
 );
+// ====================== Comentarios ======================= //
+
 
 const Service = ({ navigation }) => (
   <ScrollView>
