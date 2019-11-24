@@ -3,8 +3,10 @@ import { createStackNavigator } from 'react-navigation';
 import Login from './pages/auth/login';
 import SignIn from './pages/auth/signin';
 import Main from './pages/main';
-import Service from './pages/service';
 import Options from './pages/options';
+import Service from './pages/service/service.js';
+import ContractService from './pages/service/contractService.js';
+
 
 
 export default createStackNavigator ({
@@ -13,6 +15,7 @@ export default createStackNavigator ({
     Main,
     Service,
     Options,
+    ContractService,
 }, {
     navigationOptions: {
         headerStyle: {

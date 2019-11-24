@@ -11,7 +11,7 @@ global.Buffer = Buffer;
 
 import StarRating from 'react-native-star-rating';
 
-import { StyleSheet, Text, FlatList, Image, View, Dimensions } from 'react-native';
+import { StyleSheet, Text, FlatList, Image, View } from 'react-native';
 import {
   Avatar,
   Card,

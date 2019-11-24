@@ -55,8 +55,8 @@ export default class Login extends Component {
           labelColor={'#fafafa'}
           underlineColor={'#5849FF'}
           focusedLabelColor={'#ddd'}
-          value={this.state.emailOrUser}
-          onChangeText={value => this.setState({ emailOrUser: value })}
+          value={ this.state.emailOrUser }
+          onChangeText={value => this.setState({ emailOrUser: value.toString() })}
           style={{ backgroundColor: 'rgba(52, 52, 52, 0.2)', color: '#fafafa'}}
           containerStyle={{ width: '60%' }}
         />
