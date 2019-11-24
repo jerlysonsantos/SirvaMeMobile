@@ -195,6 +195,7 @@ export default class Main extends Component {
               <DrawerItem text={'Inbox'} icon={'mail'} active />
               <DrawerItem text={'Outbox'} icon={'send'} />
               <DrawerItem text={'Favorites'} icon={'favorite'} />
+              <DrawerItem text={'Options'} icon={'adb'} onPress={() => {this.props.navigation.navigate('Options');}} />
             </DrawerSection>
           </View>
         );

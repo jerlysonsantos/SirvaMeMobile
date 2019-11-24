@@ -1,16 +1,18 @@
 import { createStackNavigator } from 'react-navigation';
 
 import Login from './pages/auth/login';
-import Singin from './pages/auth/singin';
+import SignIn from './pages/auth/signin';
 import Main from './pages/main';
 import Service from './pages/service';
+import Options from './pages/options';
 
 
 export default createStackNavigator ({
     Login,
-    Singin,
+    SignIn,
     Main,
     Service,
+    Options,
 }, {
     navigationOptions: {
         headerStyle: {
