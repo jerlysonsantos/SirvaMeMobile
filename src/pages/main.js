@@ -192,9 +192,15 @@ export default class Main extends Component {
               }
             />
             <DrawerSection bottomDivider>
-              <DrawerItem text={'Inbox'} icon={'mail'} active />
-              <DrawerItem text={'Outbox'} icon={'send'} />
-              <DrawerItem text={'Favorites'} icon={'favorite'} />
+              <DrawerItem text={'Inbox'} icon={'mail'} active onPress={() => {
+                this.props.navigation.navigate('ViewAcceptedService');
+              }}/>
+              <DrawerItem text={'Outbox'} icon={'send'} onPress={() => {
+                this.props.navigation.navigate('ViewToAcceptService');
+              }} />
+              <DrawerItem text={'Favorites'} icon={'favorite'} onPress={() => {
+                this.props.navigation.navigate('ViewContractedServices');
+              }}/>
             </DrawerSection>
           </View>
         );

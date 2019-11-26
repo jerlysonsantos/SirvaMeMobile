@@ -47,6 +47,18 @@ export default class Service extends Component {
   );
   // ====================== Preços ======================= //
 
+  // ====================== Contacts ======================= //
+  contactComponent = ({ item }) => {
+    return (
+      <View>
+       <Text>
+         <Text style={{ fontWeight: "bold" }}>{item.contactType}:</Text> {item.contact}
+        </Text>
+      </View>
+    );
+  };
+  // ====================== Contacts ======================= //
+
   // ====================== Comentarios ======================= //
   commentsComponet = ({ item }) => {
     return (
@@ -109,6 +121,18 @@ export default class Service extends Component {
                     data={ navigation.state.params.service.prices }
                     keyExtractor={item => item._id}
                     renderItem={ this.pricesComponent }
+                    ListHeaderComponent={ this.searchComponent }
+                    onEndReachedThreshold={0.1}
+                />
+                <Text></Text>
+                <Text style={ styles.serviceDescripion }>
+                  { 'Contatos' }
+                </Text>
+                <FlatList
+                    contentContainerStyle={ styles.list }
+                    data={ navigation.state.params.service.contacts }
+                    keyExtractor={item => item._id}
+                    renderItem={ this.contactComponent }
                     ListHeaderComponent={ this.searchComponent }
                     onEndReachedThreshold={0.1}
                 />
@@ -195,7 +219,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     marginTop: 20,
     elevation: 5,
-    height: '90%',
+    height: '95%',
     width: '90%',
     ...shadow(20),
   },

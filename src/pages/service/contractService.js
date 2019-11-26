@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import LinearGradient from 'react-native-linear-gradient';
-import { ScrollView, StyleSheet, View, Text } from 'react-native';
+import { ScrollView, StyleSheet, View, Text, Dimensions } from 'react-native';
+
+const { height: screenHeight } = Dimensions.get('window')
 
 import MapView, { Marker } from 'react-native-maps';
 
@@ -14,6 +16,7 @@ import {
 import DatePicker from 'react-native-datepicker'
 
 import api from '../../services/api';
+import AsyncStorage from '@react-native-community/async-storage';
 
 export default class ContractService extends Component {
   state = {
@@ -57,13 +60,6 @@ export default class ContractService extends Component {
               longitude: position.coords.longitude || -49.10990411,
             }
           },
-
-          regionLoc: {
-            coordinate: {
-              latitude: position.coords.latitude || -25.4333664,
-              longitude: position.coords.longitude || -49.10990411,
-            }
-          }
         });
       },
       (error) => {
@@ -102,6 +98,7 @@ export default class ContractService extends Component {
     try {
       await api.post(`/operations/contractService/${service._id}`, {
         date: this.state.date,
+        extraInfo: this.state.info,
         location: {
           type: 'Point',
           coordinates: [
@@ -109,8 +106,13 @@ export default class ContractService extends Component {
             this.state.geoLoc.coordinate.longitude
           ]
         },
-        extraInfo: this.state.info,
+      }, {
+        headers: {
+          'Authorization':  `Bearrer ${await AsyncStorage.getItem('@token')}`,
+        }
       });
+      alert('Serviço contratado com sucesso')
+      this.props.navigation.navigate('Main');
     } catch (error) {
       alert(error.response.data.error);
     }
@@ -185,7 +187,13 @@ export default class ContractService extends Component {
                     containerStyle={{ width: '100%' }}
                   />
                   <Text></Text>
-                  <Button text={'Contratar'} type="contained"/>
+                  <Button
+                    text={'Contratar'}
+                    type="contained"
+                    onPress={() => {
+                      this.contractService(service);
+                    }}
+                  />
                 </CardContent>
               </Card>
           </View>
