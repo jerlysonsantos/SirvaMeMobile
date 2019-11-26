@@ -1,8 +1,9 @@
 import { createStackNavigator } from 'react-navigation';
 
 import Login from './pages/auth/login';
-import Singin from './pages/auth/singin';
+import SignIn from './pages/auth/signin';
 import Main from './pages/main';
+import Options from './pages/options';
 import Service from './pages/service/service.js';
 import ViewToAcceptService from './pages/service/viewToAcceptService.js';
 import ViewContractedServices from './pages/service/viewContractedServices.js';
@@ -12,9 +13,10 @@ import ContractService from './pages/service/contractService.js';
 
 export default createStackNavigator ({
     Login,
-    Singin,
+    SignIn,
     Main,
     Service,
+    Options,
     ContractService,
     ViewToAcceptService,
     ViewAcceptedService,
