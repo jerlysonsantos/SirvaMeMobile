@@ -91,7 +91,7 @@ export default class Main extends Component {
         this.loadProducts(pageNumber);
 
     }
-    // ====================== Carregar Itens da API ======================= //
+    // ====================== /Carregar Itens da API ======================= //
 
     // ====================== Renderizar Item ======================= //
     renderItem = ({ item }) => (
@@ -123,8 +123,8 @@ export default class Main extends Component {
         </CardContent>
       </Card>
     );
-    // ====================== Renderizar Item ======================= //
-
+    // ====================== /Renderizar Item ======================= //
+    // ====================== Filtro ======================= //
     searchComponent = () => (
         <Card style={ styles.search }>
             <CardHeader
@@ -173,7 +173,7 @@ export default class Main extends Component {
             </CardContent>
         </Card>
     );
-
+    // ====================== /Filtro ======================= //
     render() {
       // ====================== Side Menu ======================= //
 
@@ -192,15 +192,14 @@ export default class Main extends Component {
               }
             />
             <DrawerSection bottomDivider>
-              <DrawerItem text={'Inbox'} icon={'mail'} active />
-              <DrawerItem text={'Outbox'} icon={'send'} />
-              <DrawerItem text={'Favorites'} icon={'favorite'} />
-              <DrawerItem text={'Options'} icon={'adb'} onPress={() => {this.props.navigation.navigate('Options');}} />
+              <DrawerItem text={'Home'} icon={'mail'} active onPress={() => {this.props.navigation.navigate('Main');}} />
+              <DrawerItem text={'Inbox'} icon={'send'} onPress={() => {this.props.navigation.navigate('ViewToAcceptService');}} />
+              <DrawerItem text={'Perfil'} icon={'adb'} onPress={() => {this.props.navigation.navigate('Options');}} />
             </DrawerSection>
           </View>
         );
       };
-
+      // ====================== Barra Horizontal ======================= //
       const AppbarContent = isOpen => {
         return (
           <Appbar
@@ -213,8 +212,9 @@ export default class Main extends Component {
           />
         );
       };
+      // ====================== /Barra Horizontal ======================= //
 
-      // ====================== Side Menu ======================= //
+      // ====================== /Side Menu ======================= //
 
       return (
         <Drawer
