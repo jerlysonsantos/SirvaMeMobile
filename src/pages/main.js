@@ -193,7 +193,9 @@ export default class Main extends Component {
             />
             <DrawerSection bottomDivider>
               <DrawerItem text={'Home'} icon={'mail'} active onPress={() => {this.props.navigation.navigate('Main');}} />
-              <DrawerItem text={'Inbox'} icon={'send'} onPress={() => {this.props.navigation.navigate('ViewToAcceptService');}} />
+              <DrawerItem text={'Serviços Contratatos'} icon={'send'} onPress={() => {this.props.navigation.navigate('ViewContractedServices');}} />
+              <DrawerItem text={'Serviços para Aceitar'} icon={'send'} onPress={() => {this.props.navigation.navigate('ViewToAcceptService');}} />
+              <DrawerItem text={'Serviços Aceitos'} icon={'send'} onPress={() => {this.props.navigation.navigate('ViewAcceptedService');}} />
               <DrawerItem text={'Perfil'} icon={'adb'} onPress={() => {this.props.navigation.navigate('Options');}} />
             </DrawerSection>
           </View>

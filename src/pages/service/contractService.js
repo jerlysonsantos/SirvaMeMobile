@@ -11,7 +11,8 @@ import {
   CardContent,
   shadow,
   Button,
-  TextField } from 'material-bread';
+  TextField,
+ } from 'material-bread';
 
 import DatePicker from 'react-native-datepicker'
 
@@ -19,12 +20,12 @@ import api from '../../services/api';
 import AsyncStorage from '@react-native-community/async-storage';
 
 export default class ContractService extends Component {
-  
+
   constructor(props) {
     super(props);
 
     this.state = {
-      from: new Date(),
+      date: new Date(),
       info: '',
       state: '',
       city: '',
@@ -54,19 +55,28 @@ export default class ContractService extends Component {
       },
       { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
     );
-    
+
   }
 
   contractService = async (service) => {
     try {
+
       await api.post(`/operations/contractService/${service._id}`, {
         date: this.state.date,
         extraInfo: this.state.info,
+        address: {
+          state: this.state.state,
+          city: this.state.city,
+          district: this.state.district,
+          streetName: this.state.streetName,
+          number: this.state.number,
+          zipcode: this.state.zipcode,
+        },
         location: {
           type: 'Point',
           coordinates: [
-            this.state.geoLoc.coordinate.latitude,
-            this.state.geoLoc.coordinate.longitude
+            this.state.coords.latitude,
+            this.state.coords.longitude
           ]
         },
       }, {
@@ -89,6 +99,12 @@ export default class ContractService extends Component {
     .then(res => { this.setState({address: res[0].formatedAddress} ); console.log(res[0].formattedAddress)} )
   }
 
+  cepMask = (text) => {
+    if (text.length <= 8) {
+      this.setState({ zipcode: text.replace(/[^0-9]/g, '') })
+    }
+  }
+
   render() {
     const { navigation } = this.props;
     const service = navigation.state.params.service;
@@ -100,38 +116,44 @@ export default class ContractService extends Component {
           <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
             <Card style={ styles.serviceContainer }>
                 <CardContent style={ styles.serviceContent }>
-                  
+
+                <View style={{ width: '100%' }}>
                   <Text style={ styles.texts } >Insira Informações de Endereço</Text>
                   <TextField
                     label={'CEP'}
                     type={'filled'}
+                    keyboardType = 'numeric'
                     value={ this.state.zipcode }
-                    onChangeText={ value => this.setState({ zipcode: value }) }
-                    style={{ backgroundColor: 'rgba(255, 255, 255, 0.2)', color: '#000'}}
+                    onChangeText={ value => this.cepMask(value) }
+                    style={ styles.textField }
                     containerStyle={{ width: '100%' }}
+                    helperText={'Apenas Numeros'}
                   />
-                  <TextField
-                    label={'Estado'}
-                    type={'filled'}
-                    value={ this.state.state }
-                    onChangeText={ value => this.setState({ state: value }) }
-                    style={{ backgroundColor: 'rgba(255, 255, 255, 0.2)', color: '#000'}}
-                    containerStyle={{ width: '100%' }}
-                  />
-                  <TextField
-                    label={'Cidade'}
-                    type={'filled'}
-                    value={ this.state.city }
-                    onChangeText={ value => this.setState({ city: value }) }
-                    style={{ backgroundColor: 'rgba(255, 255, 255, 0.2)', color: '#000'}}
-                    containerStyle={{ width: '100%' }}
-                  />
+                  <View style={{ flexDirection: 'row' }}>
+                    <TextField
+                      label={'Cidade'}
+                      type={'filled'}
+                      value={ this.state.city }
+                      onChangeText={ value => this.setState({ city: value }) }
+                      style={{ backgroundColor: 'rgba(255, 255, 255, 0.2)', color: '#000' }}
+                      containerStyle={{ width: '50%', marginRight: 20 }}
+                    />
+                    <TextField
+                      label={'Estado'}
+                      type={'filled'}
+                      value={ this.state.state }
+                      onChangeText={ value => this.setState({ state: value }) }
+                      style={{ backgroundColor: 'rgba(255, 255, 255, 0.2)', color: '#000'}}
+                      containerStyle={{ width: '40%' }}
+                    />
+                  </View>
+
                   <TextField
                     label={'Bairro'}
                     type={'filled'}
                     value={ this.state.district }
                     onChangeText={ value => this.setState({ district: value }) }
-                    style={{ backgroundColor: 'rgba(255, 255, 255, 0.2)', color: '#000'}}
+                    style={styles.textField}
                     containerStyle={{ width: '100%' }}
                   />
                   <TextField
@@ -139,15 +161,16 @@ export default class ContractService extends Component {
                     type={'filled'}
                     value={ this.state.streetName }
                     onChangeText={ value => this.setState({ streetName: value }) }
-                    style={{ backgroundColor: 'rgba(255, 255, 255, 0.2)', color: '#000'}}
+                    style={styles.textField}
                     containerStyle={{ width: '100%' }}
                   />
                   <TextField
                     label={'Numero da Casa'}
                     type={'filled'}
                     value={ this.state.number }
-                    onChangeText={ value => this.setState({ number: value }) }
-                    style={{ backgroundColor: 'rgba(255, 255, 255, 0.2)', color: '#000'}}
+                    keyboardType = 'numeric'
+                    onChangeText={ value => this.setState({ number: value.replace(/[^0-9]/g, '') }) }
+                    style={styles.textField}
                     containerStyle={{ width: '100%' }}
                   />
                   <TextField
@@ -155,11 +178,12 @@ export default class ContractService extends Component {
                     type={'filled'}
                     value={ this.state.info }
                     onChangeText={ value => this.setState({ info: value }) }
-                    style={{ backgroundColor: 'rgba(255, 255, 255, 0.2)', color: '#000'}}
+                    style={styles.textField}
                     containerStyle={{ width: '100%' }}
                   />
-                  <Text></Text>
+                </View>
 
+                  <Text></Text>
                   <Text style={ styles.texts }>Escolha a Data e Horário que você deseja o serviço</Text>
                   <DatePicker
                     style={{ width: 200 }}
@@ -171,7 +195,7 @@ export default class ContractService extends Component {
                     is24Hour={ true }
                     confirmBtnText="Confirm"
                     cancelBtnText="Cancel"
-                    onDateChange={(date) => { this.setState({ from: date }) }}
+                    onDateChange={(date) => { this.setState({ date }) }}
                   />
                   <Text></Text>
                   <Button
@@ -222,6 +246,11 @@ const styles = StyleSheet.create({
 
   texts: {
     textAlign: 'center',
+  },
+
+  textField: {
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    color: '#000'
   },
 
   map: {

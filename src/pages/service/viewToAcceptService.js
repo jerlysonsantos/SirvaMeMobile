@@ -104,7 +104,11 @@ export default class viewToAcceptService extends Component {
         />
         <CardContent>
           <Text style={{ color: '#000'}}>Data e Hora do contrato </Text>
-          <Text style={{ color: '#69A1F4'}}>  { `${date.getDate()}/${date.getMonth()}/${date.getFullYear()} às ${date.getHours()}:${date.getMinutes()}`}</Text>
+          <Text style={{ color: '#69A1F4'}}>  { `${date.getDate()}/${date.getMonth() + 1 }/${date.getFullYear()} às ${date.getHours()}:${date.getMinutes()}`}</Text>
+          <Text></Text>
+          <View>
+
+          </View>
           <Text></Text>
           <Button text={'Checkar Endereço'} type="contained"
             onPress={() => {}}
@@ -158,7 +162,7 @@ export default class viewToAcceptService extends Component {
 }
 
 viewToAcceptService.navigationOptions = ({ navigation }) => ({
-  title: 'Contratos Pendentes'
+  title: 'Serviços para Aceitar'
 });
 
 const styles = {
