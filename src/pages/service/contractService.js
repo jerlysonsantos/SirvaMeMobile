@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import LinearGradient from 'react-native-linear-gradient';
 import { ScrollView, StyleSheet, View, Text, Dimensions } from 'react-native';
+import Geocoder from 'react-native-geocoder';
+
 
 const { height: screenHeight } = Dimensions.get('window')
-
-import MapView, { Marker } from 'react-native-maps';
 
 import {
   Card,
@@ -19,47 +19,34 @@ import api from '../../services/api';
 import AsyncStorage from '@react-native-community/async-storage';
 
 export default class ContractService extends Component {
-  state = {
-    date: new Date(),
-    info: '',
-    geoLoc: {
-      coordinate: {
-        latitude: 0.0,
-        longitude: 0.0
-      }
-    },
-    currentLoc: {
-      coordinate: {
-        latitude: 0.0,
-        longitude: 0.0
-      }
-    },
+  
+  constructor(props) {
+    super(props);
 
-    regionLoc: {
-      coordinate: {
-        latitude: 0.0,
-        longitude: 0.0
+    this.state = {
+      from: new Date(),
+      info: '',
+      state: '',
+      city: '',
+      district: '',
+      streetName: '',
+      number: 0,
+      zipcode: '',
+      coords: {
+        lat: null,
+        lng: null,
       }
-    }
-  };
+    };
+  }
 
   componentDidMount() {
     navigator.geolocation.getCurrentPosition(
       (position) => {
         this.setState({
-          currentLoc: {
-            coordinate: {
-              latitude: position.coords.latitude || 0.0,
-              longitude: position.coords.longitude || 0.0,
-            }
-          },
-
-          geoLoc: {
-            coordinate: {
-              latitude: position.coords.latitude || -25.4333664,
-              longitude: position.coords.longitude || -49.10990411,
-            }
-          },
+          coords: {
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+          }
         });
       },
       (error) => {
@@ -67,32 +54,8 @@ export default class ContractService extends Component {
       },
       { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
     );
+    
   }
-
-  _renderMarkers() {
-    return (
-      <Marker
-        draggable
-        coordinate={this.state.geoLoc.coordinate}
-        onDragEnd={coord => {
-          console.log(coord.nativeEvent);
-          const { coordinate } = coord.nativeEvent;
-
-          this.setState({
-            geoLoc: {
-              coordinate: {
-                latitude: coordinate.latitude,
-                longitude: coordinate.longitude,
-              }
-            }
-          })
-
-        }}
-      />
-    )
-
-  }
-
 
   contractService = async (service) => {
     try {
@@ -118,10 +81,18 @@ export default class ContractService extends Component {
     }
   };
 
+  getAddress = async () => {
+    await Geocoder.geocodePosition({
+      lat: 40.7809261,
+      lng: -73.9637594
+    })
+    .then(res => { this.setState({address: res[0].formatedAddress} ); console.log(res[0].formattedAddress)} )
+  }
+
   render() {
     const { navigation } = this.props;
     const service = navigation.state.params.service;
-    const date = new Date();
+    const date = new Date()
 
     return (
       <ScrollView>
@@ -129,6 +100,66 @@ export default class ContractService extends Component {
           <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
             <Card style={ styles.serviceContainer }>
                 <CardContent style={ styles.serviceContent }>
+                  
+                  <Text style={ styles.texts } >Insira Informações de Endereço</Text>
+                  <TextField
+                    label={'CEP'}
+                    type={'filled'}
+                    value={ this.state.zipcode }
+                    onChangeText={ value => this.setState({ zipcode: value }) }
+                    style={{ backgroundColor: 'rgba(255, 255, 255, 0.2)', color: '#000'}}
+                    containerStyle={{ width: '100%' }}
+                  />
+                  <TextField
+                    label={'Estado'}
+                    type={'filled'}
+                    value={ this.state.state }
+                    onChangeText={ value => this.setState({ state: value }) }
+                    style={{ backgroundColor: 'rgba(255, 255, 255, 0.2)', color: '#000'}}
+                    containerStyle={{ width: '100%' }}
+                  />
+                  <TextField
+                    label={'Cidade'}
+                    type={'filled'}
+                    value={ this.state.city }
+                    onChangeText={ value => this.setState({ city: value }) }
+                    style={{ backgroundColor: 'rgba(255, 255, 255, 0.2)', color: '#000'}}
+                    containerStyle={{ width: '100%' }}
+                  />
+                  <TextField
+                    label={'Bairro'}
+                    type={'filled'}
+                    value={ this.state.district }
+                    onChangeText={ value => this.setState({ district: value }) }
+                    style={{ backgroundColor: 'rgba(255, 255, 255, 0.2)', color: '#000'}}
+                    containerStyle={{ width: '100%' }}
+                  />
+                  <TextField
+                    label={'Nome da Rua'}
+                    type={'filled'}
+                    value={ this.state.streetName }
+                    onChangeText={ value => this.setState({ streetName: value }) }
+                    style={{ backgroundColor: 'rgba(255, 255, 255, 0.2)', color: '#000'}}
+                    containerStyle={{ width: '100%' }}
+                  />
+                  <TextField
+                    label={'Numero da Casa'}
+                    type={'filled'}
+                    value={ this.state.number }
+                    onChangeText={ value => this.setState({ number: value }) }
+                    style={{ backgroundColor: 'rgba(255, 255, 255, 0.2)', color: '#000'}}
+                    containerStyle={{ width: '100%' }}
+                  />
+                  <TextField
+                    label={'Informações Extras'}
+                    type={'filled'}
+                    value={ this.state.info }
+                    onChangeText={ value => this.setState({ info: value }) }
+                    style={{ backgroundColor: 'rgba(255, 255, 255, 0.2)', color: '#000'}}
+                    containerStyle={{ width: '100%' }}
+                  />
+                  <Text></Text>
+
                   <Text style={ styles.texts }>Escolha a Data e Horário que você deseja o serviço</Text>
                   <DatePicker
                     style={{ width: 200 }}
@@ -141,50 +172,6 @@ export default class ContractService extends Component {
                     confirmBtnText="Confirm"
                     cancelBtnText="Cancel"
                     onDateChange={(date) => { this.setState({ from: date }) }}
-                  />
-                  <Text></Text>
-
-                  <MapView
-                    style={ styles.map }
-                    showsUserLocation={ true }
-                    followsUserLocation={ true }
-                    toolbarEnabled={ true }
-                    loadingEnabled={ true }
-
-                    onPress={coord => {
-                      const { coordinate } = coord.nativeEvent;
-
-                      this.setState({
-                        geoLoc: {
-                          coordinate: {
-                            latitude: coordinate.latitude,
-                            longitude: coordinate.longitude,
-                          }
-                        },
-
-                      })
-
-                    }}
-                    initialRegion={{
-                      latitude: this.state.geoLoc.coordinate.latitude,
-                      longitude: this.state.geoLoc.coordinate.longitude,
-                      latitudeDelta: 0.0922,
-                      longitudeDelta: 0.0421,
-                    }}
-                  >{ this._renderMarkers() }
-                  </MapView>
-
-                  <Text style={ styles.texts }>Digite informações para auxiliar a localização</Text>
-                  <TextField
-                    label={'Informações Extras'}
-                    type={'filled'}
-                    labelColor={'#000'}
-                    underlineColor={'#5849FF'}
-                    focusedLabelColor={'#000'}
-                    value={this.state.info}
-                    onChangeText={value => this.setState({ info: value })}
-                    style={{ backgroundColor: 'rgba(255, 255, 255, 0.2)', color: '#000'}}
-                    containerStyle={{ width: '100%' }}
                   />
                   <Text></Text>
                   <Button

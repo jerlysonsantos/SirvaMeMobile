@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import LinearGradient from 'react-native-linear-gradient'
 import { ScrollView, Text, Dimensions, FlatList, Image, View } from 'react-native';
-import openMap from 'react-native-open-maps';
 
 const { height: screenHeight } = Dimensions.get('window')
 

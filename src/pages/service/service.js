@@ -98,11 +98,10 @@ export default class Service extends Component {
       <ScrollView>
         <LinearGradient colors={[ '#69A1F4', '#8B55FF']} style={ styles.container }>
           <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
-            <Avatar
-              type="image"
+            <Avatar type="image"
               image={<Image source={{uri: `data:image/webp;base64,${Buffer.from(navigation.state.params.service.user.avatar).toString('base64')}`}} /> }
-              size={40}
-              style={{ elevation: 6, position: 'absolute', ...shadow(4) }}
+              size={60}
+              style={{ elevation: 4, position: 'absolute', ...shadow(4) }}
             />
             <Card style={ styles.serviceContainer }>
               <View style={{ justifyContent: 'center', alignItems: 'center', paddingTop: 20 }}>
@@ -216,12 +215,9 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#DDD',
     borderRadius: 5,
-    marginBottom: 10,
-    marginTop: 20,
-    elevation: 5,
-    height: '95%',
+    marginTop: 40,
+    height: '90%',
     width: '90%',
-    ...shadow(20),
   },
 
   commentContent: {

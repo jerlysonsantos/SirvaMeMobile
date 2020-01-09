@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import LinearGradient from 'react-native-linear-gradient'
 import { ScrollView, Text, Dimensions, FlatList, Image, View } from 'react-native';
-import openMap from 'react-native-open-maps';
+
 
 const { height: screenHeight } = Dimensions.get('window')
 
@@ -83,9 +83,7 @@ export default class viewToAcceptService extends Component {
   };
 
   _renderContracts = ({ item }) => {
-    const _goToYosemite = () => {
-      openMap({ latitude: item.location.coordinates[0], longitude: item.location.coordinates[1] });
-    }
+
 
     const date = new Date(item.date);
 
@@ -109,7 +107,7 @@ export default class viewToAcceptService extends Component {
           <Text style={{ color: '#69A1F4'}}>  { `${date.getDate()}/${date.getMonth()}/${date.getFullYear()} às ${date.getHours()}:${date.getMinutes()}`}</Text>
           <Text></Text>
           <Button text={'Checkar Endereço'} type="contained"
-            onPress={() => { _goToYosemite() }}
+            onPress={() => {}}
           />
           <Text></Text>
           <Text style={{ color: '#000'}}>Informações Extras de Endereço </Text>
