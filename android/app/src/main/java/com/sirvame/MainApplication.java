@@ -3,6 +3,7 @@ package com.sirvame;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.calendarevents.CalendarEventsPackage;
 import com.devfd.RNGeocoder.RNGeocoderPackage;
 import com.horcrux.svg.SvgPackage;
 import com.devfd.RNGeocoder.RNGeocoderPackage;
@@ -13,7 +14,6 @@ import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
-import com.airbnb.android.react.maps.MapsPackage;
 
 import java.util.Arrays;
 import java.util.List;
@@ -30,10 +30,10 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new CalendarEventsPackage(),
             new RNGeocoderPackage(),
             new SvgPackage(),
             new RNGeocoderPackage(),
-            new MapsPackage(),
             new AsyncStoragePackage(),
             new LinearGradientPackage(),
           new VectorIconsPackage()
@@ -45,6 +45,7 @@ public class MainApplication extends Application implements ReactApplication {
       return "index";
     }
   };
+
 
   @Override
   public ReactNativeHost getReactNativeHost() {

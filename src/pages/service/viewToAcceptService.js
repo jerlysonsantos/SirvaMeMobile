@@ -103,19 +103,19 @@ export default class viewToAcceptService extends Component {
           subtitle={ item.client.name }
         />
         <CardContent>
-          <Text style={{ color: '#000'}}>Data e Hora do contrato </Text>
+          <Text style={{ color: '#000'}}>Data e Hora do Serviço </Text>
           <Text style={{ color: '#69A1F4'}}>  { `${date.getDate()}/${date.getMonth() + 1 }/${date.getFullYear()} às ${date.getHours()}:${date.getMinutes()}`}</Text>
           <Text></Text>
+          <Text style={{ color: '#000'}}>Endereço: </Text>
           <View>
-
+            <Text>{`Cidade: ${ item.address.city } - Estado: ${ item.address.state }\nBairro: ${ item.address.district } - Nome da Rua: ${ item.address.streetName } Nº ${item.address.number}\nInformações Extras de Endereço: ${ item.extraInfo }
+            `}</Text>
           </View>
           <Text></Text>
           <Button text={'Checkar Endereço'} type="contained"
-            onPress={() => {}}
+            onPress={() => { this.props.navigation.navigate('Maps', { address: item.address }) }}
           />
           <Text></Text>
-          <Text style={{ color: '#000'}}>Informações Extras de Endereço </Text>
-          <Text>  { item.extraInfo }</Text>
         </CardContent>
         <CardActions
           rightActionItems={[
