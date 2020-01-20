@@ -64,10 +64,9 @@ export default class viewToAcceptService extends Component {
     }
   };
 
-  rejectService = async(id) => {
-    console.log(`/operations/rejectService/${id}`)
+  rejectService = async(serviceId, clientId) => {
     try {
-      await api.delete(`/operations/rejectService/${id}`, {
+      await api.delete(`/operations/rejectService/${serviceId}/${clientId}`, {
         headers: {
           'Authorization':  `Bearrer ${await AsyncStorage.getItem('@token')}`,
         }
@@ -86,7 +85,7 @@ export default class viewToAcceptService extends Component {
 
 
     const date = new Date(item.date);
-
+    console.log(item);
     return (
       <View>
       <Card styles={{ height: '20%' }}>
@@ -125,7 +124,7 @@ export default class viewToAcceptService extends Component {
               color={'#E91E63'}
               style={{ marginRight: 8 }}
               onPress={() => {
-                this.rejectService(item._id)
+                this.rejectService(item._id, item.client._id)
               }}
             />,
             <Button

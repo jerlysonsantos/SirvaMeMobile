@@ -30,9 +30,9 @@ export default class viewToAcceptService extends Component {
     this.getContractedServices();
   }
 
-  cancelService = async(serviceId, id) => {
+  cancelService = async(serviceId) => {
     try {
-      await api.delete(`/operations/cancelService/${serviceId}/${id}`, {
+      await api.delete(`/operations/cancelService/${serviceId}`, {
         headers: {
           'Authorization':  `Bearrer ${await AsyncStorage.getItem('@token')}`,
         }
@@ -90,7 +90,7 @@ export default class viewToAcceptService extends Component {
               textColor={'#E91E63'}
               style={{ marginRight: 8 }}
               onPress={() => {
-                this.cancelService(item.service._id, item._id)
+                this.cancelService(item.service._id)
               }}
             />
           ]}
