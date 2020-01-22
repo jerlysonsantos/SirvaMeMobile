@@ -3,7 +3,7 @@ package com.sirvame;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
-import com.calendarevents.CalendarEventsPackage;
+
 import com.devfd.RNGeocoder.RNGeocoderPackage;
 import com.horcrux.svg.SvgPackage;
 import com.devfd.RNGeocoder.RNGeocoderPackage;
@@ -30,10 +30,8 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
-            new CalendarEventsPackage(),
             new RNGeocoderPackage(),
             new SvgPackage(),
-            new RNGeocoderPackage(),
             new AsyncStoragePackage(),
             new LinearGradientPackage(),
           new VectorIconsPackage()

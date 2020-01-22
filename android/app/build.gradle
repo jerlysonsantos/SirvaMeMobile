@@ -144,7 +144,6 @@ android {
 }
 
 dependencies {
-    implementation project(':react-native-calendar-events')
     implementation project(':react-native-geocoder')
     implementation project(':react-native-svg')
     implementation project(':react-native-geocoder-reborn')

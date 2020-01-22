@@ -16,6 +16,8 @@ import {
 
 import DatePicker from 'react-native-datepicker'
 
+import axios from 'axios';
+
 import api from '../../services/api';
 import AsyncStorage from '@react-native-community/async-storage';
 
@@ -103,6 +105,28 @@ export default class ContractService extends Component {
     if (text.length <= 8) {
       this.setState({ zipcode: text.replace(/[^0-9]/g, '') })
     }
+    if (text.length == 8) {
+      this.getAddressViaCep(text.replace(/[^0-9]/g, ''));
+    }
+  }
+
+  getAddressViaCep = async (text) => {
+    const cep = axios.create({
+      baseURL: 'https://viacep.com.br/ws'
+    });
+    console.log(text)
+    await cep.get(`/${text}/json/`)
+      .then((res) => {
+        const { data } = res;
+
+        this.setState({
+          state: data.uf,
+          city: data.localidade,
+          district: data.bairro,
+          streetName: data.logradouro,
+        })
+
+      });
   }
 
   render() {
@@ -225,6 +249,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingTop: 10,
     backgroundColor: '#fafafa',
+    height: screenHeight,
   },
   serviceContent: {
     marginTop: 10,
