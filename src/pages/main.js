@@ -11,6 +11,8 @@ global.Buffer = Buffer;
 
 import StarRating from 'react-native-star-rating';
 
+import GLOBAL from './global.js'
+
 import { StyleSheet, Text, FlatList, Image, View } from 'react-native';
 import {
   Avatar,
@@ -176,6 +178,8 @@ export default class Main extends Component {
     // ====================== /Filtro ======================= //
     render() {
       // ====================== Side Menu ======================= //
+
+      GLOBAL.main = this;
 
       const DrawerContent = ({ name, email, avatar }) => {
         return (

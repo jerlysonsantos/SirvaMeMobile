@@ -2,16 +2,12 @@ import React, { Component } from 'react';
 import LinearGradient from 'react-native-linear-gradient'
 import { ScrollView, Text, Dimensions, FlatList, View } from 'react-native';
 
-import RNCalendarEvents from 'react-native-calendar-events';
-RNCalendarEvents.authorizationStatus()
-
 const { height: screenHeight } = Dimensions.get('window')
 
 import { Buffer } from 'buffer';
 global.Buffer = Buffer;
 
 import {
-  Avatar,
   Card,
   CardHeader,
   CardContent,
@@ -80,14 +76,7 @@ export default class viewToAcceptService extends Component {
         />
         <CardContent>
           <Text style={{ color: '#000'}}>Data e Hora do contrato </Text>
-          <Text style={{ color: '#69A1F4'}}
-            onPress={() => {
-              RNCalendarEvents.saveEvent('Title of event', {
-                startDate: '2016-08-19T19:26:00.000Z',
-                endDate: '2017-08-19T19:26:00.000Z'
-              })
-            }}
-          >  { `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()} às ${date.getHours()}:${date.getMinutes()}`}</Text>
+          <Text style={{ color: '#69A1F4'}}>  { `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()} às ${date.getHours()}:${date.getMinutes()}`}</Text>
           <Text></Text>
           <Text style={{ color: '#000'}}>Informações Extras de Endereço </Text>
           <Text>  { item.extraInfo }</Text>

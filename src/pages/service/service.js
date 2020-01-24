@@ -64,24 +64,14 @@ export default class Service extends Component {
     return (
       <Card style={{ marginTop: '2%', marginLeft: '1%', marginRight: '1%' }}>
         <CardHeader
-          thumbnail={
-            <Avatar
-              type="image"
-              image={<Image source={{uri: `data:image/webp;base64,${Buffer.from(item.author.avatar).toString('base64')}`}} /> }
-              size={40}
-              style={{ elevation: 4, ...shadow(4) }}
-            />
-          }
-          title={ item.author.name }
           action={
             <StarRating
               disabled={true}
               maxStars={5}
-              starSize={10}
+              starSize={15}
               rating={ item.rank }
-            />}
-        />
-        <CardContent style={styles.commentContent}>
+            />}/>
+          <CardContent>
           <Text
             numberOfLines={ 2 }
             style={ styles.serviceDescripion }>

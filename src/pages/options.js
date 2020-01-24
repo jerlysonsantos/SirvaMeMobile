@@ -1,31 +1,23 @@
 import React, { Component } from 'react';
+import { StyleSheet, Text, Image, View } from 'react-native';
 
-import { StyleSheet, Text, FlatList, Image, View } from 'react-native';
-import {
-  Drawer,
-  DrawerHeader,
-  DrawerSection,
-  DrawerItem,
-  Appbar } from 'material-bread';
 import LinearGradient from 'react-native-linear-gradient';
 import {
   Avatar,
   Card,
-  CardHeader,
-  CardContent,
-  IconButton,
-  shadow,
-  Menu,
   Button,
-  MenuItem,
+  CardContent,
+  shadow,
   Icon } from 'material-bread';
 
 import { Buffer } from 'buffer';
 global.Buffer = Buffer;
 
 import AsyncStorage from '@react-native-community/async-storage';
+import ImagePicker from 'react-native-image-picker';
 
 import api from '../services/api';
+import GLOBAL from './global';
 
 export default class Options extends Component {
 
@@ -33,6 +25,7 @@ export default class Options extends Component {
     name:'',
     avatar: '',
     email: '',
+    avatarSource: {},
   };
 
   async componentDidMount() {
@@ -41,17 +34,64 @@ export default class Options extends Component {
 
   getAvatar = async() => {
     const user = JSON.parse(await AsyncStorage.getItem('@_user'));
-    this.setState({ name:user.name, email:user.email, avatar: user.avatar });
+    this.setState({ name:user.name, email:user.email, avatar: Buffer.from(user.avatar).toString('base64') });
 
+  };
+
+  pickImage = () => {
+    const options = {
+      title: 'Selecione Uma Imagem',
+      storageOptions: {
+        skipBackup: true,
+        path: 'images',
+      },
+    };
+
+    ImagePicker.showImagePicker(options, (response) => {
+
+      if (response.didCancel) {
+        console.log('User cancelled image picker');
+      } else if (response.error) {
+        console.log('ImagePicker Error: ', response.error);
+      } else {
+        const source = { path: response.path, type: response.type, fileName: response.fileName };
+        this.setState({ avatar: response.data });
+        this.setState({
+          avatarSource: source,
+        });
+      }
+    });
+  };
+
+  updateAvatar = async () => {
+    try {
+      const data = new FormData();
+      data.append('image', {
+        path: this.state.avatarSource.path,
+        type: this.state.avatarSource.type,
+        fileName: this.state.avatarSource.fileName
+      });
+      console.log(data);
+      const response = await api.post('/options/avatarUpload', data, {
+        headers: {
+          'Authorization':  `Bearrer ${await AsyncStorage.getItem('@token')}`,
+        }
+      });
+
+      GLOBAL.main.setState({ avatar: response.avatar });
+
+    } catch (error) {
+      console.log(error)
+    }
   };
 
   render() {
     return(
       <LinearGradient colors={[ '#69A1F4', '#8B55FF']} style={styles.container}>
       <View style={{ height:130}}>
-        <Icon style={ styles.iconFinal } name="create" size={24}  onPress={() => { this.props.navigation.navigate('Main'); }}/>
+        <Icon style={ styles.iconFinal } name="create" size={24}  onPress={() => { this.pickImage(); }}/>
         <Avatar type="image"
-        image={<Image source={{uri: `data:image/webp;base64,${Buffer.from(this.state.avatar).toString('base64')}`}} /> }
+        image={<Image source={{uri: `data:image/webp;base64,${ this.state.avatar }`}} /> }
         size={150}
         style={{elevation: 4,...shadow(4) }}/>
       </View>
@@ -71,6 +111,13 @@ export default class Options extends Component {
             <Icon name="email" size={16} style={ styles.iconInicial} />
             <Text>Email{"\n"}{this.state.email}</Text>
           </View>
+          <Button
+            text={'Atualizar Dados'}
+            type="contained"
+            onPress={() => {
+              this.updateAvatar();
+            }}
+          />
         </CardContent>
        </Card>
       </LinearGradient>

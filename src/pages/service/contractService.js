@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import LinearGradient from 'react-native-linear-gradient';
 import { ScrollView, StyleSheet, View, Text, Dimensions } from 'react-native';
-import Geocoder from 'react-native-geocoder';
+import Geocoder from 'react-native-geocoder-reborn';
 
 
 const { height: screenHeight } = Dimensions.get('window')
@@ -29,12 +29,12 @@ export default class ContractService extends Component {
     this.state = {
       date: new Date(),
       info: '',
-      state: '',
-      city: '',
-      district: '',
-      streetName: '',
+      state: 'Estado',
+      city: 'Cidade',
+      district: 'Bairro',
+      streetName: 'Rua',
       number: 0,
-      zipcode: '',
+      zipcode: '0000000',
       coords: {
         lat: null,
         lng: null,
@@ -58,6 +58,20 @@ export default class ContractService extends Component {
       { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
     );
 
+    setTimeout(() => {
+      Geocoder.geocodePosition(this.state.coords).then(res => {
+        const [address] = res;
+
+        this.setState({
+          state: address.adminArea,
+          city: address.subAdminArea,
+          district: address.subLocality,
+          streetName: address.streetName,
+          zipcode: address.postalCode.replace(/[^0-9]/g, ''),
+        });
+      }).catch(err => console.log(err));
+    }, 200);
+
   }
 
   contractService = async (service) => {
@@ -77,8 +91,8 @@ export default class ContractService extends Component {
         location: {
           type: 'Point',
           coordinates: [
-            this.state.coords.latitude,
-            this.state.coords.longitude
+            this.state.coords.lat,
+            this.state.coords.lng
           ]
         },
       }, {
@@ -114,7 +128,6 @@ export default class ContractService extends Component {
     const cep = axios.create({
       baseURL: 'https://viacep.com.br/ws'
     });
-    console.log(text)
     await cep.get(`/${text}/json/`)
       .then((res) => {
         const { data } = res;
@@ -229,6 +242,7 @@ export default class ContractService extends Component {
                       this.contractService(service);
                     }}
                   />
+
                 </CardContent>
               </Card>
           </View>
