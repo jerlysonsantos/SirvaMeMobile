@@ -58,7 +58,7 @@ export default class Main extends Component {
 
     getUser = async () => {
       const user = JSON.parse(await AsyncStorage.getItem('@_user'));
-      this.setState({ name: user.name, email: user.email, avatar: user.avatar });
+      this.setState({ name: user.name, email: user.email, avatar: Buffer.from(user.avatar).toString('base64') });
     };
 
     // ====================== Carregar Itens da API ======================= //
@@ -191,7 +191,7 @@ export default class Main extends Component {
               <Avatar
                 type="image"
                 size={48}
-                image={<Image source={{uri: `data:image/webp;base64,${Buffer.from(avatar).toString('base64')}`}} />}
+                image={<Image source={{uri: `data:image/webp;base64,${avatar}`}} />}
                 />
               }
             />

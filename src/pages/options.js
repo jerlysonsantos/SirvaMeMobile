@@ -54,7 +54,7 @@ export default class Options extends Component {
       } else if (response.error) {
         console.log('ImagePicker Error: ', response.error);
       } else {
-        const source = { path: response.path, type: response.type, fileName: response.fileName };
+        const source = { uri: response.uri, type: response.type, fileName: response.fileName };
         this.setState({ avatar: response.data });
         this.setState({
           avatarSource: source,
@@ -63,26 +63,30 @@ export default class Options extends Component {
     });
   };
 
-  updateAvatar = async () => {
+  updateAvatar = () => {
+    return new Promise (async (resolve, reject) => {
     try {
       const data = new FormData();
       data.append('image', {
-        path: this.state.avatarSource.path,
+        uri: this.state.avatarSource.uri,
+        name: this.state.avatarSource.fileName,
         type: this.state.avatarSource.type,
-        fileName: this.state.avatarSource.fileName
       });
+
       console.log(data);
       const response = await api.post('/options/avatarUpload', data, {
         headers: {
           'Authorization':  `Bearrer ${await AsyncStorage.getItem('@token')}`,
+          'Content-Type': 'multipart/form-data',
         }
       });
-
       GLOBAL.main.setState({ avatar: response.avatar });
+      console.log(GLOBAL.main.state)
+      console.log(this.state.avatar)
 
     } catch (error) {
       console.log(error)
-    }
+    }});
   };
 
   render() {
