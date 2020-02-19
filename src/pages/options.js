@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, Image, View } from 'react-native';
+import { StyleSheet, Image, View } from 'react-native';
 
 import LinearGradient from 'react-native-linear-gradient';
 import {
@@ -8,7 +8,8 @@ import {
   Button,
   CardContent,
   shadow,
-  Icon } from 'material-bread';
+  Icon,
+  TextField } from 'material-bread';
 
 import { Buffer } from 'buffer';
 global.Buffer = Buffer;
@@ -22,9 +23,10 @@ import GLOBAL from './global';
 export default class Options extends Component {
 
   state = {
-    name:'',
+    name: 'name',
     avatar: '',
-    email: '',
+    email: 'email',
+    password: '',
     avatarSource: {},
   };
 
@@ -34,8 +36,7 @@ export default class Options extends Component {
 
   getAvatar = async() => {
     const user = JSON.parse(await AsyncStorage.getItem('@_user'));
-    this.setState({ name:user.name, email:user.email, avatar: Buffer.from(user.avatar).toString('base64') });
-
+    this.setState({ name: user.name, email: user.email, avatar: Buffer.from(user.avatar).toString('base64') });
   };
 
   pickImage = () => {
@@ -61,6 +62,29 @@ export default class Options extends Component {
         });
       }
     });
+  };
+
+  updateProfile = async () => {
+    try {
+      const data = {
+        name: this.state.name,
+        email: this.state.email,
+        password: this.state.password
+      };
+
+      const response = await api.put('/options/updateProfile', data, {
+        headers: {
+          'Authorization':  `Bearrer ${await AsyncStorage.getItem('@token')}`
+        }
+      });
+      console.log(response)
+      this.updateAvatar();
+
+      GLOBAL.main.setState({ name: this.state.name, email: this.state.name });
+
+    } catch (error) {
+      console.log(error)
+    }
   };
 
   updateAvatar = () => {
@@ -100,26 +124,51 @@ export default class Options extends Component {
         style={{elevation: 4,...shadow(4) }}/>
       </View>
       <Card style={ styles.cardContainer }>
-        <CardContent style={{alignItems:'flex-start'}}>
+        <CardContent>
           <View style={styles.divItem}>
-            <Icon name="account-box" size={16} style={ styles.iconInicial} />
-            <Text>Nome {"\n"}{this.state.name} </Text>
+            <TextField
+              label={'Nome'}
+              value={ this.state.name }
+              onChangeText={value => this.setState({ name: value })}
+              leadingIcon= {
+                <Icon name="account-box" size={16}/>
+              }
+              containerStyle={{ width: '90%' }}
+              dense
+            />
           </View>
-          <Icon style={ styles.iconFinal } name="create" size={24}  onPress={() => { this.props.navigation.navigate('Main'); }}/>
           <View style={styles.divItem}>
-            <Icon name="lock" size={16} style={ styles.iconInicial} />
-            <Text>Senha</Text>
+            <TextField
+                label={'Password'}
+                value={ this.state.password }
+                onChangeText={value => this.setState({ password: value })}
+                leadingIcon= {
+                  <Icon name="lock" size={16}/>
+                }
+                containerStyle={{ width: '90%' }}
+                dense
+                secureTextEntry
+              />
           </View>
-          <Icon style={ styles.iconFinal } name="create" size={24}  onPress={() => { this.props.navigation.navigate('Main'); }}/>
           <View style={styles.divItem}>
-            <Icon name="email" size={16} style={ styles.iconInicial} />
-            <Text>Email{"\n"}{this.state.email}</Text>
+            <TextField
+              label={'Email'}
+              value={ this.state.email }
+              onChangeText={value => this.setState({ email: value })}
+              leadingIcon= {
+                <Icon name="email" size={16}/>
+              }
+              containerStyle={{ width: '90%' }}
+              dense
+            />
+
           </View>
           <Button
             text={'Atualizar Dados'}
             type="contained"
+            dense
             onPress={() => {
-              this.updateAvatar();
+              this.updateProfile();
             }}
           />
         </CardContent>
@@ -141,13 +190,12 @@ const styles = StyleSheet.create({
   cardContainer:{
     marginTop:10,
     paddingTop:30,
-    paddingBottom:25
-
+    paddingBottom:25,
   },
   divItem: {
     flexDirection:"row",
     marginBottom:5,
-    alignItems:"stretch",
+    alignItems:"center",
   },
   iconInicial: {
     marginRight:5,
