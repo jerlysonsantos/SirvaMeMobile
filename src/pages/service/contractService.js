@@ -1,18 +1,24 @@
 import React, { Component } from 'react';
 import LinearGradient from 'react-native-linear-gradient';
-import { ScrollView, StyleSheet, View, Text, Dimensions } from 'react-native';
+import { ScrollView, StyleSheet, View, Dimensions } from 'react-native';
 import Geocoder from 'react-native-geocoder-reborn';
 
 
 const { height: screenHeight } = Dimensions.get('window')
 
+import { shadow } from 'material-bread';
+
 import {
+  Container,
   Card,
-  CardContent,
-  shadow,
-  Button,
-  TextField,
- } from 'material-bread';
+  CardItem,
+  Form,
+  Item,
+  Text,
+  H3,
+  Input,
+  Label,
+  Button} from 'native-base';
 
 import DatePicker from 'react-native-datepicker'
 
@@ -149,19 +155,113 @@ export default class ContractService extends Component {
 
     return (
       <ScrollView>
+        <Container>
         <LinearGradient colors={[ '#69A1F4', '#8B55FF']} style={ styles.container }>
           <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
             <Card style={ styles.serviceContainer }>
-                <CardContent style={ styles.serviceContent }>
+                <CardItem header style={ styles.serviceContent }>
+                  <H3>Insira Informações de Endereço</H3>
+                </CardItem>
+                <CardItem>
+                  <Form style={{ width: '100%' }}>
+                    <Item floatingLabel style={ styles.input }>
+                      <Label>CEP</Label>
+                      <Input
+                        value={ this.state.zipcode }
+                        onChangeText={ value => this.cepMask(value) }/>
+                    </Item>
+                  </Form>
 
-                <View style={{ width: '100%' }}>
-                  <Text style={ styles.texts } >Insira Informações de Endereço</Text>
-                  <TextField
+                </CardItem>
+
+                  <Text style={ styles.texts }>Escolha a Data e Horário que você deseja o serviço</Text>
+                  <DatePicker
+                    style={{ width: 200 }}
+                    date={ this.state.from }
+                    mode="datetime"
+                    format="DD/MM/YYYY HH:MM"
+                    minDate={ date }
+                    showIcon={ false }
+                    is24Hour={ true }
+                    confirmBtnText="Confirm"
+                    cancelBtnText="Cancel"
+                    onDateChange={(date) => { this.setState({ date }) }}
+                  />
+                  <Text></Text>
+                  <Button
+                    text={'Contratar'}
+                    type="contained"
+                    onPress={() => {
+                      this.contractService(service);
+                    }}
+                  />
+              </Card>
+          </View>
+        </LinearGradient>
+        </Container>
+      </ScrollView>
+    );
+  }
+}
+
+ContractService.navigationOptions = ({ navigation }) => ({
+  title: 'Selecione a Data e o Horário'
+});
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingTop: 10,
+    backgroundColor: '#fafafa',
+    height: screenHeight,
+  },
+  serviceContent: {
+    marginTop: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  serviceContainer: {
+    backgroundColor: '#FFF',
+    borderWidth: 1,
+    borderColor: '#DDD',
+    borderRadius: 5,
+    marginBottom: 10,
+    marginTop: 20,
+    elevation: 5,
+    height: '95%',
+    width: '90%',
+    ...shadow(20),
+  },
+
+  texts: {
+    textAlign: 'center',
+  },
+
+  input: {
+    width: '80%'
+  },
+
+  textField: {
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    color: '#000'
+  },
+
+  map: {
+    paddingTop: 20,
+    height: 500,
+    width: '100%'
+  },
+
+});
+
+/**
+ *                   <TextField
                     label={'CEP'}
                     type={'filled'}
                     keyboardType = 'numeric'
-                    value={ this.state.zipcode }
-                    onChangeText={ value => this.cepMask(value) }
+
                     style={ styles.textField }
                     containerStyle={{ width: '100%' }}
                     helperText={'Apenas Numeros'}
@@ -218,85 +318,4 @@ export default class ContractService extends Component {
                     style={styles.textField}
                     containerStyle={{ width: '100%' }}
                   />
-                </View>
-
-                  <Text></Text>
-                  <Text style={ styles.texts }>Escolha a Data e Horário que você deseja o serviço</Text>
-                  <DatePicker
-                    style={{ width: 200 }}
-                    date={ this.state.from }
-                    mode="datetime"
-                    format="DD/MM/YYYY HH:MM"
-                    minDate={ date }
-                    showIcon={ false }
-                    is24Hour={ true }
-                    confirmBtnText="Confirm"
-                    cancelBtnText="Cancel"
-                    onDateChange={(date) => { this.setState({ date }) }}
-                  />
-                  <Text></Text>
-                  <Button
-                    text={'Contratar'}
-                    type="contained"
-                    onPress={() => {
-                      this.contractService(service);
-                    }}
-                  />
-
-                </CardContent>
-              </Card>
-          </View>
-        </LinearGradient>
-      </ScrollView>
-    );
-  }
-}
-
-ContractService.navigationOptions = ({ navigation }) => ({
-  title: 'Selecione a Data e o Horário'
-});
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingTop: 10,
-    backgroundColor: '#fafafa',
-    height: screenHeight,
-  },
-  serviceContent: {
-    marginTop: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  serviceContainer: {
-    backgroundColor: '#FFF',
-    borderWidth: 1,
-    borderColor: '#DDD',
-    borderRadius: 5,
-    marginBottom: 10,
-    marginTop: 20,
-    elevation: 5,
-    height: '95%',
-    width: '90%',
-    ...shadow(20),
-  },
-
-  texts: {
-    textAlign: 'center',
-  },
-
-  textField: {
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
-    color: '#000'
-  },
-
-  map: {
-    paddingTop: 20,
-    height: 500,
-    width: '100%'
-  },
-
-});
-
+ */

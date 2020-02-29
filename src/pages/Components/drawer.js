@@ -74,7 +74,7 @@ export class DrawerContent extends Component {
               <ListItem icon onPress={() => {this.props.navigation.navigate('Options');}}>
                 <Left>
                   <Button style={{ backgroundColor: "#8B55FF" }} >
-                    <Icon name='adb' />
+                    <Icon name='settings' />
                   </Button>
                 </Left>
                 <Body>

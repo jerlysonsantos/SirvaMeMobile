@@ -5,20 +5,16 @@
 import React, { Component } from 'react';
 import LinearGradient from 'react-native-linear-gradient';
 import Carousel, { ParallaxImage } from 'react-native-snap-carousel';
-import { FlatList, StyleSheet, Text, View, ScrollView, Image, Dimensions } from 'react-native';
+import { FlatList, StyleSheet, View, ScrollView, Image, Dimensions } from 'react-native';
 
-const { width: screenWidth } = Dimensions.get('window')
+const { width: screenWidth, height: screenHeight } = Dimensions.get('window')
 
 import { Buffer } from 'buffer';
 global.Buffer = Buffer;
 
-import {
-  Avatar,
-  Card,
-  CardHeader,
-  CardContent,
-  shadow,
-  Button } from 'material-bread';
+import { Button, Card, CardItem, Text, H3,Right, Body } from 'native-base';
+import { Avatar } from 'react-native-elements';
+import { shadow } from 'material-bread';
 
 import StarRating from 'react-native-star-rating';
 
@@ -63,21 +59,24 @@ export default class Service extends Component {
   commentsComponet = ({ item }) => {
     return (
       <Card style={{ marginTop: '2%', marginLeft: '1%', marginRight: '1%' }}>
-        <CardHeader
-          action={
+        <CardItem>
+          <Body>
+            <Text
+              numberOfLines={ 2 }>
+              { item.comment }
+            </Text>
+          </Body>
+        </CardItem>
+        <CardItem footer>
+          <Right>
             <StarRating
               disabled={true}
               maxStars={5}
               starSize={15}
               rating={ item.rank }
-            />}/>
-          <CardContent>
-          <Text
-            numberOfLines={ 2 }
-            style={ styles.serviceDescripion }>
-            { item.comment }
-          </Text>
-        </CardContent>
+            />
+          </Right>
+        </CardItem>
       </Card>);
     };
   // ====================== Comentarios ======================= //
@@ -87,50 +86,72 @@ export default class Service extends Component {
     return(
       <ScrollView>
         <LinearGradient colors={[ '#69A1F4', '#8B55FF']} style={ styles.container }>
-          <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
-            <Avatar type="image"
-              image={<Image source={{uri: `data:image/webp;base64,${Buffer.from(navigation.state.params.service.user.avatar).toString('base64')}`}} /> }
-              size={60}
-              style={{ elevation: 4, position: 'absolute', ...shadow(4) }}
-            />
-            <Card style={ styles.serviceContainer }>
-              <View style={{ justifyContent: 'center', alignItems: 'center', paddingTop: 20 }}>
-                <Text style={{ color: '#000' }}>{navigation.state.params.service.name}</Text>
-                <Text>{navigation.state.params.service.user.name}</Text>
-              </View>
-              <CardContent style={ styles.serviceContent }>
-                <Text style={ styles.serviceDescripion }>
-                  { navigation.state.params.service.description }
-                </Text>
-                <Text style={ styles.serviceDescripion }>
-                  { 'Preços' }
-                </Text>
-                <FlatList
-                    contentContainerStyle={ styles.list }
-                    data={ navigation.state.params.service.prices }
-                    keyExtractor={item => item._id}
-                    renderItem={ this.pricesComponent }
-                    ListHeaderComponent={ this.searchComponent }
-                    onEndReachedThreshold={0.1}
-                />
-                <Text></Text>
-                <Text style={ styles.serviceDescripion }>
-                  { 'Contatos' }
-                </Text>
-                <FlatList
-                    contentContainerStyle={ styles.list }
-                    data={ navigation.state.params.service.contacts }
-                    keyExtractor={item => item._id}
-                    renderItem={ this.contactComponent }
-                    ListHeaderComponent={ this.searchComponent }
-                    onEndReachedThreshold={0.1}
-                />
-                <Text></Text>
-                <Button text={'Contratar'} type="contained"
-                  onPress={() => { this.props.navigation.navigate('ContractService', { service: navigation.state.params.service }); }}
-                />
-              </CardContent>
-            </Card>
+          <View style={{ zIndex: 0 }}>
+            <Body>
+            <View style={{ position: 'absolute', zIndex: 2 }}>
+              <Avatar
+                rounded
+                size={'medium'}
+                source={{uri: `data:image/webp;base64,${Buffer.from(navigation.state.params.service.user.avatar).toString('base64')}`}}
+              />
+            </View>
+            </Body>
+            <View style={{ zIndex: 1, marginTop: 25 }}>
+              <Body>
+                <Card style={{ width: screenWidth - 20 }}>
+                  <CardItem header>
+                    <Body style={ styles.serviceContent }>
+                      <H3>{navigation.state.params.service.name}</H3>
+                      <Text>{navigation.state.params.service.user.name}</Text>
+                    </Body>
+                  </CardItem>
+                  <CardItem>
+                    <Text>
+                      { navigation.state.params.service.description }
+                    </Text>
+                  </CardItem>
+                  <CardItem>
+                    <Text>
+                      Preços
+                    </Text>
+                    <FlatList
+                        contentContainerStyle={ styles.list }
+                        data={ navigation.state.params.service.prices }
+                        keyExtractor={item => item._id}
+                        renderItem={ this.pricesComponent }
+                        ListHeaderComponent={ this.searchComponent }
+                        onEndReachedThreshold={0.1}
+                    />
+                  </CardItem>
+                  <CardItem>
+                    <Text>
+                      Contatos
+                    </Text>
+                    <FlatList
+                        contentContainerStyle={ styles.list }
+                        data={ navigation.state.params.service.contacts }
+                        keyExtractor={item => item._id}
+                        renderItem={ this.contactComponent }
+                        ListHeaderComponent={ this.searchComponent }
+                        onEndReachedThreshold={0.1}
+                    />
+                  </CardItem>
+                  <CardItem footer>
+                    <Body>
+                      <Button
+                      full
+                        onPress={() => {
+                          this.props.navigation.navigate('ContractService', { service: navigation.state.params.service });
+                          }}>
+                          <Text>
+                            Contratar
+                          </Text>
+                      </Button>
+                    </Body>
+                  </CardItem>
+                </Card>
+              </Body>
+            </View>
           </View>
           <Carousel
             sliderWidth={screenWidth}
@@ -177,10 +198,7 @@ Service.navigationOptions = ({ navigation }) => ({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
     paddingTop: 10,
-    backgroundColor: '#fafafa',
   },
 
   serviceContent: {

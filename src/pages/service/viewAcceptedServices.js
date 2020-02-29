@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import LinearGradient from 'react-native-linear-gradient'
 import { ScrollView, Text, Dimensions, FlatList, Image, View } from 'react-native';
-import RNCalendarEvents from 'react-native-calendar-events';
 
 const { height: screenHeight } = Dimensions.get('window')
 

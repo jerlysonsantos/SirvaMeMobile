@@ -16,6 +16,7 @@
     "react": "16.8.3",
     "react-native": "0.59.9",
     "react-native-datepicker": "^1.7.2",
+    "react-native-elements": "^1.2.7",
     "react-native-geocoder-reborn": "^0.8.3",
     "react-native-image-picker": "^2.2.0",
     "react-native-linear-gradient": "^2.5.6",

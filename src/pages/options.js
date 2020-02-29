@@ -1,15 +1,20 @@
 import React, { Component } from 'react';
-import { StyleSheet, Image, View } from 'react-native';
+import { StyleSheet, View, Dimensions } from 'react-native';
 
 import LinearGradient from 'react-native-linear-gradient';
+import { Avatar } from 'react-native-elements';
 import {
-  Avatar,
+  Container,
+  Body,
   Card,
+  CardItem,
+  Form,
+  Item,
+  Input,
   Button,
-  CardContent,
-  shadow,
   Icon,
-  TextField } from 'material-bread';
+  Text,
+  Label} from 'native-base';
 
 import { Buffer } from 'buffer';
 global.Buffer = Buffer;
@@ -115,65 +120,65 @@ export default class Options extends Component {
 
   render() {
     return(
-      <LinearGradient colors={[ '#69A1F4', '#8B55FF']} style={styles.container}>
-      <View style={{ height:130}}>
-        <Icon style={ styles.iconFinal } name="create" size={24}  onPress={() => { this.pickImage(); }}/>
-        <Avatar type="image"
-        image={<Image source={{uri: `data:image/webp;base64,${ this.state.avatar }`}} /> }
-        size={150}
-        style={{elevation: 4,...shadow(4) }}/>
-      </View>
-      <Card style={ styles.cardContainer }>
-        <CardContent>
-          <View style={styles.divItem}>
-            <TextField
-              label={'Nome'}
-              value={ this.state.name }
-              onChangeText={value => this.setState({ name: value })}
-              leadingIcon= {
-                <Icon name="account-box" size={16}/>
-              }
-              containerStyle={{ width: '90%' }}
-              dense
-            />
-          </View>
-          <View style={styles.divItem}>
-            <TextField
-                label={'Password'}
-                value={ this.state.password }
-                onChangeText={value => this.setState({ password: value })}
-                leadingIcon= {
-                  <Icon name="lock" size={16}/>
-                }
-                containerStyle={{ width: '90%' }}
-                dense
-                secureTextEntry
-              />
-          </View>
-          <View style={styles.divItem}>
-            <TextField
-              label={'Email'}
-              value={ this.state.email }
-              onChangeText={value => this.setState({ email: value })}
-              leadingIcon= {
-                <Icon name="email" size={16}/>
-              }
-              containerStyle={{ width: '90%' }}
-              dense
-            />
+      <Container>
+        <LinearGradient colors={[ '#69A1F4', '#8B55FF']} style={styles.container}>
+          <Body style={{ height:130, marginTop: 70 }}>
+            <View style={{ zIndex: 0 }}>
+              <Body>
+                <View style={{ position: 'absolute', zIndex: 2 }}>
+                  <Avatar
+                    size="xlarge"
+                    rounded
+                    onPress={() => { this.pickImage(); }}
+                    source={{ uri: `data:image/webp;base64,${ this.state.avatar }`}}
+                    showEditButton/>
+                </View>
 
-          </View>
-          <Button
-            text={'Atualizar Dados'}
-            type="contained"
-            dense
-            onPress={() => {
-              this.updateProfile();
-            }}
-          />
-        </CardContent>
-       </Card>
-      </LinearGradient>
+              <View style={{ zIndex: 1, marginTop: 125 }}>
+                <Card style={ styles.cardContainer }>
+                  <CardItem>
+                    <Form style={{ width: '100%' }}>
+                      <Item floatingLabel style={{ width: '95%' }}>
+                        <Label>Nome</Label>
+                        <Input
+                          value={ this.state.name }
+                          onChangeText={value => this.setState({ name: value })}
+                          style={{ color: '#000' }}
+                          />
+                      </Item>
+                      <Item floatingLabel style={{ width: '95%' }}>
+                        <Label>Senha</Label>
+                        <Input
+                          value={ this.state.password }
+                          onChangeText={value => this.setState({ password: value })}
+                          style={{ color: '#000' }}
+                          />
+                      </Item>
+                      <Item floatingLabel style={{ width: '95%' }}>
+                        <Label>Email</Label>
+                        <Input
+                          value={ this.state.email }
+                          onChangeText={value => this.setState({ email: value })}
+                          style={{ color: '#000' }}
+                          />
+                      </Item>
+                      <Button full onPress={() => {
+                        this.updateProfile();
+                      }}>
+                        <Text>
+                          Atualizar Dados
+                        </Text>
+                      </Button>
+                    </Form>
+
+                  </CardItem>
+                </Card>
+              </View>
+              </Body>
+            </View>
+          </Body>
+        </LinearGradient>
+      </Container>
     );
   }
 }
@@ -183,27 +188,11 @@ Options.navigationOptions = ({ navigation }) => ({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#fafafa',
   },
   cardContainer:{
-    marginTop:10,
-    paddingTop:30,
-    paddingBottom:25,
-  },
-  divItem: {
-    flexDirection:"row",
-    marginBottom:5,
-    alignItems:"center",
-  },
-  iconInicial: {
-    marginRight:5,
-  },
-  iconFinal: {
-    padding:3,
-    alignSelf:"flex-end",
-    backgroundColor: '#e6e6e6',
-    borderRadius:100/2,
+    width: Dimensions.get('window').width - 10,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
+
