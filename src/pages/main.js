@@ -13,27 +13,28 @@ import StarRating from 'react-native-star-rating';
 
 import GLOBAL from './global.js'
 
-import { StyleSheet, Text, FlatList, Image, View } from 'react-native';
-import {
-  Avatar,
-  Card,
-  CardHeader,
-  CardContent,
-  IconButton,
-  shadow,
-  Menu,
-  Button,
-  MenuItem,
-  Icon } from 'material-bread';
+import { StyleSheet, FlatList } from 'react-native';
+import { shadow } from 'material-bread';
 
 import {
+  Container,
+  Header,
+  Card,
+  CardItem,
+  Body,
+  Title,
+  Text,
+  Button,
+  H3,
+  Right,
+  Left,
+  Thumbnail,
   Drawer,
-  DrawerHeader,
-  DrawerSection,
-  DrawerItem,
-  Appbar } from 'material-bread';
+  Icon } from 'native-base';
 
 import LinearGradient from 'react-native-linear-gradient';
+
+import { DrawerContent } from './Components/drawer.js';
 
 export default class Main extends Component {
     static navigationOptions = {
@@ -55,6 +56,13 @@ export default class Main extends Component {
       this.loadProducts();
       this.getUser();
     }
+
+    closeControlPanel = () => {
+      this.drawer._root.close();
+    };
+    openControlPanel = () => {
+      this.drawer._root.open();
+    };
 
     getUser = async () => {
       const user = JSON.parse(await AsyncStorage.getItem('@_user'));
@@ -93,36 +101,39 @@ export default class Main extends Component {
         this.loadProducts(pageNumber);
 
     }
-    // ====================== /Carregar Itens da API ======================= //
+    // ====================== Carregar Itens da API ======================= //
 
     // ====================== Renderizar Item ======================= //
     renderItem = ({ item }) => (
       <Card style={ styles.productContainer }>
-        <CardHeader
-          thumbnail={
-            <Avatar
-              type="image"
-              image={<Image source={{uri: `data:image/webp;base64,${Buffer.from(item.user.avatar).toString('base64')}`}} /> }
-              size={40}
-              style={{ elevation: 4, ...shadow(4) }}
+        <CardItem header>
+            <Thumbnail
+              source={{uri: `data:image/webp;base64,${Buffer.from(item.user.avatar).toString('base64')}`}}
             />
-          }
-          title={ item.name }
-          subtitle={ `Serviço por ${item.user.name}` }
-          action={<IconButton name="more-vert" size={24} />}
-        />
-        <CardContent onPress={() => { this.props.navigation.navigate('Service', { service: item }); }}>
+          <Body>
+            <Right>
+              <H3>{ item.name }</H3>
+              <Text>{ item.user.name }</Text>
+            </Right>
+
+          </Body>
+        </CardItem>
+        <CardItem button onPress={() => { this.props.navigation.navigate('Service', { service: item }); }}>
           <Text style={ styles.productDescripion }>
             { item.description }
           </Text>
-          <StarRating
-            disabled={true}
-            maxStars={5}
-            starSize={20}
-            rating={item.rank}
-            selectedStar={(rating) => this.onStarRatingPress(rating)}
-          />
-        </CardContent>
+        </CardItem>
+        <CardItem footer>
+          <Right>
+            <StarRating
+              disabled={true}
+              maxStars={5}
+              starSize={20}
+              rating={item.rank}
+              selectedStar={(rating) => this.onStarRatingPress(rating)}
+            />
+          </Right>
+        </CardItem>
       </Card>
     );
     // ====================== /Renderizar Item ======================= //
@@ -177,34 +188,9 @@ export default class Main extends Component {
     );
     // ====================== /Filtro ======================= //
     render() {
-      // ====================== Side Menu ======================= //
 
       GLOBAL.main = this;
 
-      const DrawerContent = ({ name, email, avatar }) => {
-        return (
-          <View>
-            <DrawerHeader
-            title={name}
-            subtitle={email}
-            avatar={
-              <Avatar
-                type="image"
-                size={48}
-                image={<Image source={{uri: `data:image/webp;base64,${avatar}`}} />}
-                />
-              }
-            />
-            <DrawerSection bottomDivider>
-              <DrawerItem text={'Home'} icon={'mail'} active onPress={() => {this.props.navigation.navigate('Main');}} />
-              <DrawerItem text={'Serviços Contratatos'} icon={'send'} onPress={() => {this.props.navigation.navigate('ViewContractedServices');}} />
-              <DrawerItem text={'Serviços para Aceitar'} icon={'send'} onPress={() => {this.props.navigation.navigate('ViewToAcceptService');}} />
-              <DrawerItem text={'Serviços Aceitos'} icon={'send'} onPress={() => {this.props.navigation.navigate('ViewAcceptedService');}} />
-              <DrawerItem text={'Perfil'} icon={'adb'} onPress={() => {this.props.navigation.navigate('Options');}} />
-            </DrawerSection>
-          </View>
-        );
-      };
       // ====================== Barra Horizontal ======================= //
       const AppbarContent = isOpen => {
         return (
@@ -224,25 +210,43 @@ export default class Main extends Component {
 
       return (
         <Drawer
-          open={this.state.isOpen}
-          fullHeight
-          scrimStyles={{position: 'absolute'}}
-          drawerContent={<DrawerContent name={this.state.name} email={this.state.email} avatar={this.state.avatar} />}
-          onClose={() => this.setState({ isOpen: false })}
-          animationTime={250}>
-            <LinearGradient colors={[ '#69A1F4', '#8B55FF']} style={styles.container}>
-              <AppbarContent />
+          ref={(ref) => { this.drawer = ref; }}
+          onClose={() => this.closeControlPanel()}
+          type="overlay"
+          content={ <DrawerContent name={this.state.name} email={this.state.email} avatar={this.state.avatar} navigation={this.props.navigation} /> }
+          tapToClose={true}
+          negotiatePan={true}
+          openDrawerOffset={0.2}
+          panCloseMask={0.2}
+          closedDrawerOffset={-3}
+          styles={ styles.drawerStyles }
+          tweenHandler={(ratio) => ({
+            main: { opacity:(2-ratio)/2 }
+          })}>
+        <Container>
+          <LinearGradient colors={[ '#69A1F4', '#8B55FF']} style={styles.container}>
+            <Header>
+              <Left>
+                <Button transparent onPress={ this.openControlPanel }>
+                  <Icon name='menu' />
+                </Button>
+              </Left>
+              <Body>
+                <Title>Header</Title>
+              </Body>
+            </Header>
               <FlatList
                 contentContainerStyle={styles.list}
                 data={this.state.services}
                 keyExtractor={item => item._id}
                 renderItem={ this.renderItem }
-                ListHeaderComponent={ this.searchComponent }
+
                 // onEndReached={ this.loadMore } Desabilitado provisoriamente por motivos de bug
                 onEndReachedThreshold={0.1}
                 />
             </LinearGradient>
-        </Drawer>
+        </Container>
+      </Drawer>
       );
     }
 }
@@ -250,8 +254,6 @@ export default class Main extends Component {
 const styles = StyleSheet.create({
     container: {
       flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
       backgroundColor: '#fafafa',
     },
 
@@ -264,7 +266,6 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: '#DDD',
         borderRadius: 5,
-        marginBottom: 20,
         elevation: 5,
         ...shadow(20),
     },
@@ -277,12 +278,17 @@ const styles = StyleSheet.create({
     },
 
     search: {
-        elevation: 5,
-        backgroundColor: '#53619F',
-        marginTop: '5%',
-        marginBottom: '5%',
-        width: '100%',
-        ...shadow(20),
+      elevation: 5,
+      backgroundColor: '#53619F',
+      marginTop: '5%',
+      marginBottom: '5%',
+      width: '100%',
+      ...shadow(20),
     },
-
+    drawer: {
+      shadowColor: '#000000',
+      shadowOpacity: 0.8,
+      shadowRadius: 3
+    },
+    main: {paddingLeft: 3},
 });

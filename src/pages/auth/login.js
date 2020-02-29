@@ -2,7 +2,15 @@ import React, { Component } from 'react';
 import { StyleSheet, Text, Image } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 
-import { Button, TextField } from 'material-bread';
+import {
+  Button,
+  Form,
+  Input,
+  Item,
+  Container,
+  Content,
+  Body,
+  Label} from 'native-base';
 import LinearGradient from 'react-native-linear-gradient';
 
 
@@ -46,59 +54,49 @@ export default class Login extends Component {
 
   render () {
     return (
-      <LinearGradient colors={[ '#69A1F4', '#8B55FF']} style={styles.container}>
-        <Image source={require('../../imgs/download.png')} style={ styles.image }></Image>
-        <Text style={styles.title}>Sirva.Me</Text>
-        <TextField
-          label={'Email ou Nome de Usuário'}
-          type={'filled'}
-          labelColor={'#fafafa'}
-          underlineColor={'#5849FF'}
-          focusedLabelColor={'#ddd'}
-          value={ this.state.emailOrUser }
-          onChangeText={value => this.setState({ emailOrUser: value.toString() })}
-          style={{ backgroundColor: 'rgba(52, 52, 52, 0.2)', color: '#fafafa'}}
-          containerStyle={{ width: '60%' }}
-        />
-        <Text></Text>
-        <TextField
-          label={'Senha'}
-          type={'filled'}
-          secureTextEntry={true}
-          labelColor={'#fafafa'}
-          underlineColor={'#5849FF'}
-          focusedLabelColor={'#ddd'}
-          value={this.state.password}
-          onChangeText={value => this.setState({ password: value })}
-          style={{ backgroundColor: 'rgba(52, 52, 52, 0.2)', color: '#fafafa'}}
-          containerStyle={{ width: '60%' }}
-        />
-        <Text></Text>
-        <Button
-          text={'Acessar'}
-          type="contained"
-          dense
-          loading={this.state.loading}
-          style={styles.loginButton}
-          textStyle={{ paddingRight: '25%' }}
-          color={'#4385E9'}
-          onPress={() => {
-            this.login(this.state);
-            }}>
-        </Button>
-        <Text></Text>
-        <Button
-          text={'Cadastro'}
-          type="contained"
-          dense
-          style={styles.loginButton}
-          textStyle={{ paddingRight: '20%' }}
-          color={'#4385E9'}
-          onPress={() => {
-              this.props.navigation.navigate('Singin');
-          }}>
-        </Button>
-      </LinearGradient>
+      <Container>
+        <LinearGradient colors={[ '#69A1F4', '#8B55FF']} style={styles.container}>
+          <Text style={styles.title}>Sirva.Me</Text>
+          <Body>
+            <Form>
+              <Item floatingLabel style={ styles.input }>
+                <Label style={{ color: '#ddd' }}>Email ou Nome de Usuário</Label>
+                <Input
+                  value={ this.state.emailOrUser }
+                  onChangeText={value => this.setState({ emailOrUser: value.toString() })}
+                  style={{ color: '#fff' }}
+                  />
+              </Item>
+              <Item floatingLabel style={ styles.input }>
+                <Label style={{ color: '#ddd' }}>Senha</Label>
+                <Input
+                  value={ this.state.password }
+                  secureTextEntry={true}
+                  onChangeText={value => this.setState({ password: value })}
+                  style={{ color: '#fff' }}
+                  />
+              </Item>
+              <Button full style={{ backgroundColor: '#69A1F4' }}
+                onPress={() => {
+                  this.login(this.state);
+              }}>
+                <Text style={{ color: '#ddd' }}>
+                  Logar
+                </Text>
+              </Button>
+              <Button full style={{ backgroundColor: '#8B55FF', marginTop: 10 }}
+                onPress={() => {
+                  this.props.navigation.navigate('SignIn');
+              }}>
+                <Text style={{ color: '#ddd' }}>
+                  Cadastro
+                </Text>
+              </Button>
+            </Form>
+          </Body>
+        </LinearGradient>
+      </Container>
+
     );
   }
 }
@@ -116,8 +114,7 @@ const styles = StyleSheet.create({
   },
 
   input: {
-    backgroundColor: '#FFF',
-    width: '60%',
+    width: '70%',
     borderWidth: 0,
     borderRadius: 5,
     padding: 10,
