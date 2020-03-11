@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import LinearGradient from 'react-native-linear-gradient'
-import { ScrollView, Text, Dimensions, FlatList, Image, View } from 'react-native';
+import { ScrollView, Dimensions, FlatList, View } from 'react-native';
 
 const { height: screenHeight } = Dimensions.get('window')
 
@@ -8,13 +8,14 @@ import { Buffer } from 'buffer';
 global.Buffer = Buffer;
 
 import {
-  Avatar,
   Card,
-  CardHeader,
-  CardContent,
-  CardActions,
-  Button
-  } from 'material-bread';
+  CardItem,
+  Text,
+  H3,
+  Thumbnail,
+  Button,
+  Right,
+  Body} from 'native-base';
 
 import AsyncStorage from '@react-native-community/async-storage';
 
@@ -52,46 +53,40 @@ export default class viewToAcceptService extends Component {
 
     return (
       <View>
-      <Card styles={{ height: '20%' }}>
-        <CardHeader
-          thumbnail={
-            <Avatar
-              type="image"
-              image={<Image source={{uri: `data:image/webp;base64,${Buffer.from(item.client.avatar).toString('base64')}`}} /> }
-              size={40}
-              style={{ elevation: 4 }}
-            />
-          }
-          title={ item.service.name }
-          subtitle={ item.client.name }
-        />
-        <CardContent>
-          <Text style={{ color: '#000'}}>Data e Hora do contrato </Text>
-          <Text style={{ color: '#69A1F4'}}
-            onPress={() => {
-              RNCalendarEvents.saveEvent('Title of event', {
-                startDate: '2016-08-19T19:26:00.000Z',
-                endDate: '2017-08-19T19:26:00.000Z'
-              })
-            }}
-          >  { `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()} às ${date.getHours()}:${date.getMinutes()}`}</Text>
-          <Text></Text>
-          <Text style={{ color: '#000'}}>Endereço: </Text>
-          <View>
-            <Text>{`Cidade: ${ item.address.city } - Estado: ${ item.address.state }\nBairro: ${ item.address.district } - Nome da Rua: ${ item.address.streetName } Nº ${item.address.number}\nInformações Extras de Endereço: ${ item.extraInfo }
-            `}</Text>
-          </View>
-          <Text></Text>
-          <Button text={'Checkar Endereço'} type="contained"
-            onPress={() => { this.props.navigation.navigate('Maps', { address: item.address }) }}
-          />
-          <Text></Text>
-          <Text></Text>
-          <Text style={{ color: '#000'}}>Informações Extras de Endereço </Text>
-          <Text>  { item.extraInfo }</Text>
-        </CardContent>
-      </Card>
-      <Text></Text>
+        <Card styles={{ height: '20%' }}>
+          <CardItem header>
+            <Thumbnail
+              source={{uri: `data:image/webp;base64,${Buffer.from(item.client.avatar).toString('base64')}`}}/>
+            <Right>
+              <H3>{item.service.name}</H3>
+              <Text>{ item.client.name }</Text>
+            </Right>
+          </CardItem>
+          <CardItem>
+            <Text>Data e Hora do contrato </Text>
+            <Text style={{ color: '#69A1F4'}}>
+              { `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()} às ${date.getHours()}:${date.getMinutes()}`}
+            </Text>
+          </CardItem>
+          <CardItem>
+            <Body>
+              <Text>Endereço: </Text>
+                <Text
+                  onPress={() => { this.props.navigation.navigate('Maps', { address: item.address }) }}
+                >
+                  {`Cidade: ${ item.address.city } - Estado: ${ item.address.state }\nBairro: ${ item.address.district } - Nome da Rua: ${ item.address.streetName } Nº ${item.address.number}\nInformações Extras de Endereço: ${ item.extraInfo }`}
+                </Text>
+              <Button
+                style={{ backgroundColor: '#8B55FF' }}
+                onPress={() => { this.props.navigation.navigate('Maps', { address: item.address }) }}
+              >
+                <Text>
+                  Checkar Endereço
+                </Text>
+              </Button>
+            </Body>
+          </CardItem>
+        </Card>
       </View>
     );
   }

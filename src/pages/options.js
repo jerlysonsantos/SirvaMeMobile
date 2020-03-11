@@ -162,7 +162,9 @@ export default class Options extends Component {
                           style={{ color: '#000' }}
                           />
                       </Item>
-                      <Button full onPress={() => {
+                      <Button
+                        style={{ backgroundColor: '#8B55FF' }}
+                        full onPress={() => {
                         this.updateProfile();
                       }}>
                         <Text>

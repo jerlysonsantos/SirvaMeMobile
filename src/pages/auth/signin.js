@@ -13,6 +13,8 @@ import {
 
 import LinearGradient from 'react-native-linear-gradient';
 
+import { toastr } from '../Components/showToast.js';
+
 import api from '../../services/api';
 
 export default class Login extends Component {
@@ -41,7 +43,7 @@ export default class Login extends Component {
           this.props.navigation.navigate('Main');
         });
     } catch (error) {
-      alert(error.response.data.error);
+      toastr.showToast(error.response.data.error);
     }
   };
 

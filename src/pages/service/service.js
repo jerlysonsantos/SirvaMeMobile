@@ -139,6 +139,7 @@ export default class Service extends Component {
                   <CardItem footer>
                     <Body>
                       <Button
+                      style={{ backgroundColor: '#8B55FF' }}
                       full
                         onPress={() => {
                           this.props.navigation.navigate('ContractService', { service: navigation.state.params.service });

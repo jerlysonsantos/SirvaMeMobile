@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import LinearGradient from 'react-native-linear-gradient'
-import { ScrollView, Text, Dimensions, FlatList, View } from 'react-native';
+import { ScrollView, Dimensions, FlatList, View } from 'react-native';
 
 const { height: screenHeight } = Dimensions.get('window')
 
@@ -9,11 +9,12 @@ global.Buffer = Buffer;
 
 import {
   Card,
-  CardHeader,
-  CardContent,
-  CardActions,
-  Button
-  } from 'material-bread';
+  CardItem,
+  Text,
+  H3,
+  Button,
+  Right,
+  Body} from 'native-base';
 
 import AsyncStorage from '@react-native-community/async-storage';
 
@@ -70,32 +71,30 @@ export default class viewToAcceptService extends Component {
     return (
       <View>
       <Card styles={{ height: '20%' }}>
-        <CardHeader
-          title={ item.service.name }
-          subtitle={ item.service.type }
-        />
-        <CardContent>
-          <Text style={{ color: '#000'}}>Data e Hora do contrato </Text>
-          <Text style={{ color: '#69A1F4'}}>  { `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()} às ${date.getHours()}:${date.getMinutes()}`}</Text>
-          <Text></Text>
-          <Text style={{ color: '#000'}}>Informações Extras de Endereço </Text>
-          <Text>  { item.extraInfo }</Text>
-        </CardContent>
-        <CardActions
-          rightActionItems={[
-            <Button
-              text={'Cancel'}
-              type="outlined"
-              textColor={'#E91E63'}
-              style={{ marginRight: 8 }}
-              onPress={() => {
-                this.cancelService(item.service._id)
-              }}
-            />
-          ]}
-        />
+        <CardItem header>
+          <Body>
+            <H3>{item.service.name}</H3>
+            <Text>{ item.service.type }</Text>
+          </Body>
+        </CardItem>
+        <CardItem>
+          <Body>
+            <Text>Data e Hora do contrato </Text>
+            <Text style={{ color: '#69A1F4'}}>  { `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()} às ${date.getHours()}:${date.getMinutes()}`}</Text>
+            <Text>Informações Extras de Endereço </Text>
+            <Text>  { item.extraInfo }</Text>
+          </Body>
+        </CardItem>
+        <CardItem footer>
+          <Button
+            dark
+            onPress={() => {
+              this.cancelService(item.service._id)
+            }}>
+              <Text>Cancel</Text>
+            </Button>
+        </CardItem>
       </Card>
-      <Text></Text>
       </View>
     );
   }

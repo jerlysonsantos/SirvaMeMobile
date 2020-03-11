@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import LinearGradient from 'react-native-linear-gradient'
-import { ScrollView, Text, Dimensions, FlatList, Image, View } from 'react-native';
+import { ScrollView, Dimensions, FlatList, View } from 'react-native';
 
 
 const { height: screenHeight } = Dimensions.get('window')
@@ -9,13 +9,15 @@ import { Buffer } from 'buffer';
 global.Buffer = Buffer;
 
 import {
-  Avatar,
   Card,
-  CardHeader,
-  CardContent,
-  CardActions,
-  Button
-  } from 'material-bread';
+  CardItem,
+  Text,
+  H3,
+  Thumbnail,
+  Button,
+  Right,
+  Body,
+  Content} from 'native-base';
 
 import AsyncStorage from '@react-native-community/async-storage';
 
@@ -87,59 +89,65 @@ export default class viewToAcceptService extends Component {
     const date = new Date(item.date);
     console.log(item);
     return (
-      <View>
-      <Card styles={{ height: '20%' }}>
-        <CardHeader
-          thumbnail={
-            <Avatar
-              type="image"
-              image={<Image source={{uri: `data:image/webp;base64,${Buffer.from(item.client.avatar).toString('base64')}`}} /> }
-              size={40}
-              style={{ elevation: 4 }}
-            />
-          }
-          title={ item.service.name }
-          subtitle={ item.client.name }
-        />
-        <CardContent>
-          <Text style={{ color: '#000'}}>Data e Hora do Serviço </Text>
-          <Text style={{ color: '#69A1F4'}}>  { `${date.getDate()}/${date.getMonth() + 1 }/${date.getFullYear()} às ${date.getHours()}:${date.getMinutes()}`}</Text>
-          <Text></Text>
-          <Text style={{ color: '#000'}}>Endereço: </Text>
-          <View>
-            <Text>{`Cidade: ${ item.address.city } - Estado: ${ item.address.state }\nBairro: ${ item.address.district } - Nome da Rua: ${ item.address.streetName } Nº ${item.address.number}\nInformações Extras de Endereço: ${ item.extraInfo }
-            `}</Text>
-          </View>
-          <Text></Text>
-          <Button text={'Checkar Endereço'} type="contained"
-            onPress={() => { this.props.navigation.navigate('Maps', { address: item.address }) }}
+      <Content>
+      <Card>
+        <CardItem header>
+          <Thumbnail
+            source={{uri: `data:image/webp;base64,${Buffer.from(item.client.avatar).toString('base64')}`}}
           />
-          <Text></Text>
-        </CardContent>
-        <CardActions
-          rightActionItems={[
+          <Right>
+            <H3>
+              { item.client.name }
+            </H3>
+            <Text>
+              { item.service.name }
+            </Text>
+          </Right>
+        </CardItem>
+        <CardItem>
+          <Body>
+            <Text>Data e Hora do Serviço </Text>
+            <Text style={{ color: '#69A1F4'}}>   { `${date.getDate()}/${date.getMonth() + 1 }/${date.getFullYear()} às ${date.getHours()}:${date.getMinutes()}`}</Text>
+            <Text style={{ color: '#000'}}>Endereço: </Text>
+            <View>
+              <Text
+                onPress={() => { this.props.navigation.navigate('Maps', { address: item.address }) }}
+              >{`Cidade: ${ item.address.city } - Estado: ${ item.address.state }\nBairro: ${ item.address.district } - Nome da Rua: ${ item.address.streetName } Nº ${item.address.number}\nInformações Extras de Endereço: ${ item.extraInfo }
+              `}</Text>
+            </View>
             <Button
-              text={'Rejeitar'}
-              type="contained"
-              color={'#E91E63'}
-              style={{ marginRight: 8 }}
-              onPress={() => {
-                this.rejectService(item._id, item.client._id)
-              }}
-            />,
+              style={{ backgroundColor: '#8B55FF' }}
+              onPress={() => { this.props.navigation.navigate('Maps', { address: item.address }) }}
+            >
+              <Text>Checkar Endereço</Text>
+            </Button>
+          </Body>
+        </CardItem>
+        <CardItem footer>
+          <Body></Body>
+          <Right>
             <Button
-              text={'Aceitar'}
-              type="contained"
-              color={'#00BCD4'}
+                dark
+                onPress={() => {
+                  this.rejectService(item._id, item.client._id)
+                }}
+              >
+                <Text>Rejeitar</Text>
+            </Button>
+          </Right>
+          <Right>
+            <Button
+              style={{ backgroundColor: '#69A1F4' }}
               onPress={() => {
                 this.acceptService(item._id)
               }}
-            />
-          ]}
-        />
+            >
+              <Text>Aceitar</Text>
+            </Button>
+          </Right>
+        </CardItem>
       </Card>
-      <Text></Text>
-      </View>
+      </Content>
     );
   }
 
@@ -148,7 +156,7 @@ export default class viewToAcceptService extends Component {
       <ScrollView>
         <LinearGradient colors={[ '#69A1F4', '#8B55FF']} style={ styles.container }>
           <FlatList
-            contentContainerStyle={styles.list}
+            contentContainerStyle={ styles.list }
             data={ this.state.services }
             keyExtractor={item => item._id}
             renderItem={ this._renderContracts }

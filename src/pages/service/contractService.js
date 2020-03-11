@@ -18,7 +18,9 @@ import {
   H3,
   Input,
   Label,
-  Button} from 'native-base';
+  Button,
+  Body,
+  Content} from 'native-base';
 
 import DatePicker from 'react-native-datepicker'
 
@@ -35,12 +37,12 @@ export default class ContractService extends Component {
     this.state = {
       date: new Date(),
       info: '',
-      state: 'Estado',
-      city: 'Cidade',
-      district: 'Bairro',
-      streetName: 'Rua',
+      state: '',
+      city: '',
+      district: '',
+      streetName: '',
       number: 0,
-      zipcode: '0000000',
+      zipcode: '',
       coords: {
         lat: null,
         lng: null,
@@ -157,44 +159,93 @@ export default class ContractService extends Component {
       <ScrollView>
         <Container>
         <LinearGradient colors={[ '#69A1F4', '#8B55FF']} style={ styles.container }>
-          <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
+          <View style={ styles.centralizer }>
             <Card style={ styles.serviceContainer }>
                 <CardItem header style={ styles.serviceContent }>
                   <H3>Insira Informações de Endereço</H3>
                 </CardItem>
                 <CardItem>
-                  <Form style={{ width: '100%' }}>
+                  <Form style={{ width: '95%' }}>
                     <Item floatingLabel style={ styles.input }>
                       <Label>CEP</Label>
                       <Input
                         value={ this.state.zipcode }
                         onChangeText={ value => this.cepMask(value) }/>
                     </Item>
+                    <View style={{ flexDirection: 'row', width: '95%' }}>
+                      <Item floatingLabel style={{ width: '50%' }}>
+                        <Label>Cidade</Label>
+                        <Input
+                          value={ this.state.city }
+                          onChangeText={ value => this.setState({ city: value }) }/>
+                      </Item>
+
+                      <Item floatingLabel style={{ width: '50%' }}>
+                        <Label>Estado</Label>
+                        <Input
+                          value={ this.state.state }
+                          onChangeText={ value => this.setState({ state: value }) }/>
+                      </Item>
+                    </View>
+                    <Item floatingLabel style={ styles.input }>
+                      <Label>Nome do Bairro</Label>
+                      <Input
+                        value={ this.state.district }
+                        onChangeText={ value => this.setState({ district: value }) }/>
+                    </Item>
+                    <Item floatingLabel style={ styles.input }>
+                      <Label>Nome da Rua</Label>
+                      <Input
+                        value={ this.state.streetName }
+                        onChangeText={ value => this.setState({ streetName: value }) }/>
+                    </Item>
+                    <Item floatingLabel style={ styles.input }>
+                      <Label>Numero da Casa</Label>
+                      <Input
+                        keyboardType = 'numeric'
+                        value={ this.state.number }
+                        onChangeText={ value => this.setState({ number: value.replace(/[^0-9]/g, '') }) }/>
+                    </Item>
+                    <Item floatingLabel style={ styles.input }>
+                      <Label>Informações Extras</Label>
+                      <Input
+                        value={ this.state.info }
+                        onChangeText={ value => this.setState({ info: value }) }/>
+                    </Item>
                   </Form>
 
                 </CardItem>
-
-                  <Text style={ styles.texts }>Escolha a Data e Horário que você deseja o serviço</Text>
-                  <DatePicker
-                    style={{ width: 200 }}
-                    date={ this.state.from }
-                    mode="datetime"
-                    format="DD/MM/YYYY HH:MM"
-                    minDate={ date }
-                    showIcon={ false }
-                    is24Hour={ true }
-                    confirmBtnText="Confirm"
-                    cancelBtnText="Cancel"
-                    onDateChange={(date) => { this.setState({ date }) }}
-                  />
-                  <Text></Text>
+                <CardItem>
+                  <Body>
+                    <Text style={ styles.texts }>
+                      Escolha a Data e Horário que você deseja o serviço
+                    </Text>
+                    <DatePicker
+                      style={{ width: 200 }}
+                      date={ this.state.from }
+                      mode="datetime"
+                      format="DD/MM/YYYY HH:MM"
+                      minDate={ date }
+                      showIcon={ false }
+                      is24Hour={ true }
+                      confirmBtnText="Confirm"
+                      cancelBtnText="Cancel"
+                      onDateChange={(date) => { this.setState({ date }) }}
+                    />
+                  </Body>
+                </CardItem>
+                <CardItem footer>
                   <Button
-                    text={'Contratar'}
-                    type="contained"
+                    style={{ backgroundColor: '#8B55FF', width: '100%', paddingLeft: '35%' }}
                     onPress={() => {
                       this.contractService(service);
                     }}
-                  />
+                  >
+                    <Text>
+                      Contratar
+                    </Text>
+                  </Button>
+                </CardItem>
               </Card>
           </View>
         </LinearGradient>
@@ -217,6 +268,12 @@ const styles = StyleSheet.create({
     backgroundColor: '#fafafa',
     height: screenHeight,
   },
+
+  centralizer: {
+    flexDirection: 'row',
+    justifyContent: 'center'
+  },
+
   serviceContent: {
     marginTop: 10,
     justifyContent: 'center',
@@ -240,7 +297,7 @@ const styles = StyleSheet.create({
   },
 
   input: {
-    width: '80%'
+    width: '100%'
   },
 
   textField: {
@@ -255,67 +312,3 @@ const styles = StyleSheet.create({
   },
 
 });
-
-/**
- *                   <TextField
-                    label={'CEP'}
-                    type={'filled'}
-                    keyboardType = 'numeric'
-
-                    style={ styles.textField }
-                    containerStyle={{ width: '100%' }}
-                    helperText={'Apenas Numeros'}
-                  />
-                  <View style={{ flexDirection: 'row' }}>
-                    <TextField
-                      label={'Cidade'}
-                      type={'filled'}
-                      value={ this.state.city }
-                      onChangeText={ value => this.setState({ city: value }) }
-                      style={{ backgroundColor: 'rgba(255, 255, 255, 0.2)', color: '#000' }}
-                      containerStyle={{ width: '50%', marginRight: 20 }}
-                    />
-                    <TextField
-                      label={'Estado'}
-                      type={'filled'}
-                      value={ this.state.state }
-                      onChangeText={ value => this.setState({ state: value }) }
-                      style={{ backgroundColor: 'rgba(255, 255, 255, 0.2)', color: '#000'}}
-                      containerStyle={{ width: '40%' }}
-                    />
-                  </View>
-
-                  <TextField
-                    label={'Bairro'}
-                    type={'filled'}
-                    value={ this.state.district }
-                    onChangeText={ value => this.setState({ district: value }) }
-                    style={styles.textField}
-                    containerStyle={{ width: '100%' }}
-                  />
-                  <TextField
-                    label={'Nome da Rua'}
-                    type={'filled'}
-                    value={ this.state.streetName }
-                    onChangeText={ value => this.setState({ streetName: value }) }
-                    style={styles.textField}
-                    containerStyle={{ width: '100%' }}
-                  />
-                  <TextField
-                    label={'Numero da Casa'}
-                    type={'filled'}
-                    value={ this.state.number }
-                    keyboardType = 'numeric'
-                    onChangeText={ value => this.setState({ number: value.replace(/[^0-9]/g, '') }) }
-                    style={styles.textField}
-                    containerStyle={{ width: '100%' }}
-                  />
-                  <TextField
-                    label={'Informações Extras'}
-                    type={'filled'}
-                    value={ this.state.info }
-                    onChangeText={ value => this.setState({ info: value }) }
-                    style={styles.textField}
-                    containerStyle={{ width: '100%' }}
-                  />
- */

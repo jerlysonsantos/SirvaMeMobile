@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, Image } from 'react-native';
+import { StyleSheet, Text } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 
 import {
@@ -8,11 +8,11 @@ import {
   Input,
   Item,
   Container,
-  Content,
   Body,
   Label} from 'native-base';
 import LinearGradient from 'react-native-linear-gradient';
 
+import { toastr } from '../Components/showToast.js';
 
 import api from '../../services/api';
 
@@ -25,6 +25,7 @@ export default class Login extends Component {
     emailOrUser: '',
     password: '',
     loading: false,
+    showToast: false
   };
 
   // Caso já exista um Token, pular a tela de login, porem isso tem q mudar
@@ -47,7 +48,7 @@ export default class Login extends Component {
           this.props.navigation.navigate('Main');
       });
     } catch (error) {
-      alert(error.response.data.error);
+      toastr.showToast(error.response.data.error);
       this.setState({ loading: false });
     }
   };
